@@ -11,15 +11,15 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  username       String   @unique
-  email          String   @unique
-  hashedPassword String
-  playedGames    Int      @default(0)
-  signupDate     DateTime @default(now())
-  disabled       Boolean  @default(false)
-  cgu            Boolean  @default(false)
-  admin          Boolean  @default(false)
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
+  email       String   @unique
+  password    String
+  playedGames Int      @default(0)
+  signupDate  DateTime @default(now())
+  disabled    Boolean  @default(false)
+  cgu         Boolean  @default(false)
+  admin       Boolean  @default(false)
 
   Games    Game[]
   GameMode GameMode[]
