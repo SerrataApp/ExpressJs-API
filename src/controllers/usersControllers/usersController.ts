@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate } from '../models/userModel';
-import { json } from "body-parser";
+import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate } from '../../models/userModel';
 
 // TODO changer les numero de status d'erreur
 
