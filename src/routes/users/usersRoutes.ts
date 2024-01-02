@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUserController, getUserController } from '../../controllers/usersController';
+import { createUserController, getUserController, loginUserController } from '../../controllers/usersController';
 import usersMeRoutes from './me/usersMeRoutes';
 
 const router = express.Router();
@@ -8,6 +8,7 @@ const router = express.Router();
 router.get('/', getUserController);
 //Création d'un user
 router.post('/', createUserController);
+router.post('/login', loginUserController);
 
 router.use('/me', usersMeRoutes);
 

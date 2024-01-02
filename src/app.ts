@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import dotenv from 'dotenv';
 import cors from 'cors';
-import usersRoutes from './routes/usersRoutes';
+import usersRoutes from './routes/users/usersRoutes';
 // import gamesRoutes from './routes/gamesRoutes';
 
 dotenv.config();

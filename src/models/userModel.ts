@@ -1,5 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from 'bcrypt';
+
 const prisma = new PrismaClient();
+
+//-------------Schemas de données-------------
 
 export interface UserPrivateData extends UserPublicData {
     email: string;
@@ -21,7 +25,14 @@ export interface UserPublicData {
     playedGames: number;
 }
 
-export async function getUser(id: number): Promise<UserPublicData | null> {
+//-------------Fonctions de traitement-------------
+
+function setPassword(value: String) {
+    const buffer: Buffer = Buffer.from(value, 'utf-8');
+    return bcrypt.hashSync(buffer, 10);
+}
+
+export async function getUserPublicData(id: number): Promise<UserPublicData | null> {
     const user: UserPublicData | null = await prisma.user.findUnique({
         where: { id: id }
     });
@@ -35,7 +46,22 @@ export async function getUser(id: number): Promise<UserPublicData | null> {
     }
 }
 
+export async function getUserCreate(username: String): Promise<UserCreate | null> {
+    const user: UserCreate | null = await prisma.user.findUnique({
+        where: { username: username }
+    });
+    if (user) {
+        const { username, email, password } = user;
+        const UserCreate: UserCreate = { username, email, password };
+        console.log(UserCreate);
+        return UserCreate;
+    } else {
+        return null;
+    }
+}
+
 export async function createUser(newUser: UserCreate): Promise<UserPrivateData | null> {
+    newUser.password = setPassword(newUser.password)
     const createUser = await prisma.user.create({
         data: newUser,
     });
