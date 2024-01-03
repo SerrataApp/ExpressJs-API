@@ -28,7 +28,6 @@ export const deleteUserMeController = async (req: Request, res: Response) => {
         }
 
         res.status(200).json({
-            user,
             message: "Utilsateur supprimé"
         });
     } catch (error) {

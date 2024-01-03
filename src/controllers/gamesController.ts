@@ -26,9 +26,8 @@ export const createGameController = async (req: Request, res: Response) => {
         const newGame: Game = req.body;
         newGame.playerId = await getPlayerIdByUsername(req.user.username) as number;
 
-        const game: Game | null = await createGame(newGame);
+        await createGame(newGame);
         res.status(201).json({
-            game,
             message: "Partie créée"
         });
     } catch (error) {
