@@ -15,7 +15,7 @@ export const getUserMeController = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Erreur lors de la récupération de l\'utiliasteur' });
     }
 }
 

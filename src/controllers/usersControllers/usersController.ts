@@ -7,7 +7,6 @@ import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreat
 // TODO changer les numero de status d'erreur
 
 dotenv.config();
-const SECRET_KEY = process.env.SECRET_KEY;
 
 export const createUserController = async (req: Request, res: Response) => {
     try {
@@ -19,11 +18,11 @@ export const createUserController = async (req: Request, res: Response) => {
         const createdUser = await createUser(newUser);
         res.status(201).json({
             createdUser,
-            message: "Utilisateur crée"
+            message: "Utilisateur créé"
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur' });
     }
 }
 

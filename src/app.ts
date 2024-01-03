@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from 'dotenv';
 import cors from 'cors';
 import usersRoutes from './routes/users/usersRoutes';
-// import gamesRoutes from './routes/gamesRoutes';
+import gamesRoutes from './routes/games/gamesRoutes';
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/users', usersRoutes);
-// app.use('/games', gamesRoutes);
+app.use('/games', gamesRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({
