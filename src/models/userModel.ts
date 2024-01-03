@@ -87,3 +87,25 @@ export async function createUser(newUser: UserCreate): Promise<UserPrivateData |
         return null;
     }
 }
+
+export async function deleteUserMe(username: string): Promise<UserPrivateData | null> {
+    const user: UserPrivateData | null = await prisma.user.delete({
+        where: { username: username }
+    })
+    if (user)
+        return user;
+    else
+        return null;
+}
+
+export async function updatePlayedGame(username: string): Promise<UserPublicData | null> {
+    const user: UserPrivateData | null = await prisma.user.update({
+        where: { username: username },
+        data: {
+            playedGames: {
+                increment: 1
+            }
+        }
+    })
+    return user;
+}

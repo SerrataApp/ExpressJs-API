@@ -29,12 +29,12 @@ export const createUserController = async (req: Request, res: Response) => {
 
 export const getUserController = async (req: Request, res: Response) => {
     try {
-        const user_id = parseInt(req.query.id as string, 10);
+        const username = req.query.username as string;
 
-        if (isNaN(user_id)) {
-            return res.status(400).json({ error: 'Invalid user ID' });
+        if (!username) {
+            return res.status(400).json({ error: 'Veuillez préciser un nom d\'utilisateur' });
         }
-        const user: UserPublicData | null = await getUserPublicData(user_id);
+        const user: UserPublicData | null = await getUserPublicData(username);
 
         if (!user) {
             return res.status(404).json({ error: 'Utilisateur introuvable' });

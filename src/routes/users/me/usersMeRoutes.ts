@@ -1,8 +1,10 @@
 import express from 'express';
-import { getUserMeControler } from '../../../controllers/usersControllers/usersMeController';
+import { deleteUserMeController, getUserMeController, updatePlayedGameController } from '../../../controllers/usersControllers/usersMeController';
 
 const router = express.Router();
 
-router.get('/', getUserMeControler);
+router.get('/', getUserMeController);
+router.delete('/', deleteUserMeController);
+router.put('/game', updatePlayedGameController);
 
 export default router;
