@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getGame, createGame, GameInDb, Game } from "../models/gameModel";
+import { getPlayerIdByUsername } from "../models/userModel";
 
 export const getGameController = async (req: Request, res: Response) => {
     try {
@@ -23,6 +24,7 @@ export const getGameController = async (req: Request, res: Response) => {
 export const createGameController = async (req: Request, res: Response) => {
     try {
         const newGame: Game = req.body;
+        newGame.playerId = await getPlayerIdByUsername(req.user.username) as number;
 
         const game: Game | null = await createGame(newGame);
         res.status(201).json({
@@ -31,6 +33,6 @@ export const createGameController = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur' });
+        res.status(500).json({ error: 'Erreur lors de la création de la partie' });
     }
 }

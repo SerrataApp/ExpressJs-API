@@ -109,3 +109,15 @@ export async function updatePlayedGame(username: string): Promise<UserPublicData
     })
     return user;
 }
+
+export async function getPlayerIdByUsername(username: string): Promise<number> {
+    const user_id = await prisma.user.findUnique({
+        where: {
+            username: username
+        },
+        select: {
+            id: true
+        }
+    });
+    return user_id.id;
+}
