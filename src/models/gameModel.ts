@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 //-------------Schemas de données-------------
 
-export interface Game extends GameInDb {
+export interface Game {
     playerId: number;
     gameMode: number;
     time: number;
@@ -13,7 +13,7 @@ export interface Game extends GameInDb {
     public: Boolean;
 }
 
-export interface GameInDb {
+export interface GameInDb extends Game {
     id: number;
     gameDate: Date;
 }
@@ -30,6 +30,23 @@ export async function getGame(id: number): Promise<GameInDb | null> {
 export async function createGame(newGame: Game): Promise<Game | null> {
     const game: Game | null = await prisma.game.create({
         data: newGame
-    })
+    });
     return game;
 }
+
+export async function deleteGameMe(id: number, playerId: number): Promise<GameInDb | null> {
+    const game: GameInDb | null = await prisma.game.delete({
+        where: {
+            id: id,
+            playerId: playerId
+        }
+    });
+    return game;
+}
+
+// export async function deleteGame(id: number): Promise<GameInDb | null> {
+//     const game: GameInDb | null = await prisma.game.delete({
+//         where: { id: id }
+//     });
+//     return game;
+// }

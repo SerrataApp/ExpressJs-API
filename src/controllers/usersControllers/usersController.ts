@@ -12,8 +12,8 @@ export const createUserController = async (req: Request, res: Response) => {
     try {
         let newUser: UserCreate = req.body;
 
-        const { username, email, password } = newUser;
-        newUser = { username, email, password };
+        const { id, username, email, password } = newUser;
+        newUser = { id, username, email, password };
 
         const createdUser = await createUser(newUser);
         res.status(201).json({
@@ -61,8 +61,8 @@ export const loginUserController = async (req: Request, res: Response) => {
     }
 
     let userToLogin: UserCreate = req.body;
-    const { username, email, password } = userToLogin;
-    userToLogin = { username, email, password };
+    const { id, username, email, password } = userToLogin;
+    userToLogin = { id, username, email, password };
 
     const user: UserCreate | null = await getUserCreate(userToLogin.username);
 

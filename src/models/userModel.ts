@@ -14,6 +14,7 @@ export interface UserPrivateData extends UserPublicData {
 }
 
 export interface UserCreate {
+    id: number;
     username: string;
     email: string;
     password: string;
@@ -65,8 +66,8 @@ export async function getUserCreate(username: String): Promise<UserCreate | null
         where: { username: username }
     });
     if (user) {
-        const { username, email, password } = user;
-        const UserCreate: UserCreate = { username, email, password };
+        const { id, username, email, password } = user;
+        const UserCreate: UserCreate = { id, username, email, password };
         return UserCreate;
     } else {
         return null;
@@ -92,10 +93,7 @@ export async function deleteUserMe(username: string): Promise<UserPrivateData | 
     const user: UserPrivateData | null = await prisma.user.delete({
         where: { username: username }
     })
-    if (user)
-        return user;
-    else
-        return null;
+    return user;
 }
 
 export async function updatePlayedGame(username: string): Promise<UserPublicData | null> {
