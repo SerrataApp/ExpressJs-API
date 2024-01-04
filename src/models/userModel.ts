@@ -130,3 +130,27 @@ export async function getUserAllData(id: number) {
     })
     return user
 }
+
+export async function disableUser(id: number): Promise<Boolean> {
+    const user = await prisma.user.findUnique({
+        where: { id: id },
+        select: { disabled: true }
+    });
+
+    const newDisabledState = !user.disabled;
+
+    await prisma.user.update({
+        where: { id: id },
+        data: { disabled: newDisabledState }
+    });
+
+    return newDisabledState;
+}
+
+export async function getAdminField(id: number): Promise<Boolean> {
+    const userAdmin = await prisma.user.findUnique({
+        where: { id: id },
+        select: { admin: true }
+    });
+    return userAdmin.admin;
+}

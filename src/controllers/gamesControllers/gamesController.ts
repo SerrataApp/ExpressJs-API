@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames, getGames, getGamesByGameMode, updateGameState } from "../models/gameModel";
-import { getPlayerIdByUsername } from "../models/userModel";
+import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames, getGames, getGamesByGameMode, updateGameState } from "../../models/gameModel";
+import { getPlayerIdByUsername } from "../../models/userModel";
 
 export const getGameController = async (req: Request, res: Response) => {
     try {
@@ -38,9 +38,9 @@ export const createGameController = async (req: Request, res: Response) => {
 
 export const deleteGameController = async (req: Request, res: Response) => {
     try {
-        const game_id: number = parseInt(req.query.id as string, 10);
+        const gameId: number = parseInt(req.query.id as string, 10);
 
-        await deleteGameMe(game_id, req.user.id);
+        await deleteGameMe(gameId, req.user.id);
         res.status(201).json({
             message: "Partie supprimée"
         });

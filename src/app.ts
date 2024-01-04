@@ -4,6 +4,9 @@ import cors from 'cors';
 import usersRoutes from './routes/users/usersRoutes';
 import gameRoutes from './routes/games/gameRoutes';
 import gamesRoutes from './routes/games/gamesRoutes';
+import adminRoutes from './routes/admin/adminRoutes'
+import { ensureAuthenticated } from "./middleware/loginMiddleware";
+import { isAdmin } from "./middleware/adminMiddleware";
 
 dotenv.config();
 
@@ -15,7 +18,8 @@ app.use(cors());
 
 app.use('/users', usersRoutes);
 app.use('/score', gameRoutes);
-app.use('/scores', gamesRoutes)
+app.use('/scores', gamesRoutes);
+app.use('/admin', ensureAuthenticated, isAdmin, adminRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({

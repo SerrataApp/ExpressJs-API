@@ -1,5 +1,5 @@
 import express from 'express';
-import { createGameController, deleteGameController, getAllUserGamesController, getGameController } from '../../controllers/gamesController';
+import { createGameController, deleteGameController, getAllUserGamesController, getGameController } from '../../controllers/gamesControllers/gamesController';
 import { ensureAuthenticated } from '../../middleware/loginMiddleware';
 import { isGameOwner } from '../../middleware/gameMiddleware';
 

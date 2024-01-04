@@ -1,5 +1,5 @@
 import express from "express";
-import { getGamesByGameModeController, getGamesController, updateGameStateController } from "../../controllers/gamesController";
+import { getGamesByGameModeController, getGamesController, updateGameStateController } from "../../controllers/gamesControllers/gamesController";
 import { ensureAuthenticated } from "../../middleware/loginMiddleware";
 import { isGameOwner } from "../../middleware/gameMiddleware";
 
