@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getGame, createGame, GameInDb, Game, deleteGameMe } from "../models/gameModel";
+import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames } from "../models/gameModel";
 import { getPlayerIdByUsername } from "../models/userModel";
 
 export const getGameController = async (req: Request, res: Response) => {
@@ -47,5 +47,20 @@ export const deleteGameController = async (req: Request, res: Response) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erreur lors de la suppression de la partie' });
+    }
+}
+
+export const getAllUserGamesController = async (req: Request, res: Response) => {
+    try {
+        const userId: number = parseInt(req.query.id as string, 10);
+        const games: [GameInDb] | null = await getAllUserGames(userId);
+        res.status(201).json({
+            total: games?.length,
+            games,
+            message: `Parties de l'utilisateur numéro ${userId}`
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erreur lors de la récupération des parties de l\'utilisateur' });
     }
 }

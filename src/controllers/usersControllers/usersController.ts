@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate } from '../../models/userModel';
+import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate, getUserAllData } from '../../models/userModel';
 
 // TODO changer les numero de status d'erreur
 
@@ -89,7 +89,9 @@ export const loginUserController = async (req: Request, res: Response) => {
 }
 
 export const test = async (req: Request, res: Response) => {
+    const userId: number = parseInt(req.query.id as string, 10);
+    const user = await getUserAllData(userId);
     res.status(200).json({
-        message: "Hello Wolrd!"
+        user
     })
 }

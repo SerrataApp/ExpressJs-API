@@ -27,6 +27,13 @@ export async function getGame(id: number): Promise<GameInDb | null> {
     return game;
 }
 
+export async function getAllUserGames(userId: number): Promise<[GameInDb] | null> {
+    const games: [GameInDb] | null = await prisma.game.findMany({
+        where: { playerId: userId }
+    });
+    return games;
+}
+
 export async function createGame(newGame: Game): Promise<Game | null> {
     const game: Game | null = await prisma.game.create({
         data: newGame

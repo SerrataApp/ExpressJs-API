@@ -119,3 +119,14 @@ export async function getPlayerIdByUsername(username: string): Promise<number> {
     });
     return user_id.id;
 }
+
+export async function getUserAllData(id: number) {
+    const user = await prisma.user.findUnique({
+        where: { id: id },
+        include: {
+            Games: true,
+            GameMode: true
+        },
+    })
+    return user
+}
