@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames } from "../models/gameModel";
+import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames, getGames, getGamesByGameMode } from "../models/gameModel";
 import { getPlayerIdByUsername } from "../models/userModel";
 
 export const getGameController = async (req: Request, res: Response) => {
@@ -52,15 +52,42 @@ export const deleteGameController = async (req: Request, res: Response) => {
 
 export const getAllUserGamesController = async (req: Request, res: Response) => {
     try {
-        const userId: number = parseInt(req.query.id as string, 10);
-        const games: [GameInDb] | null = await getAllUserGames(userId);
+        const games: [] = await getAllUserGames(req.query.username as string);
         res.status(201).json({
             total: games?.length,
             games,
-            message: `Parties de l'utilisateur numéro ${userId}`
+            message: `Parties de l'utilisateur ${req.query.username}`
         })
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erreur lors de la récupération des parties de l\'utilisateur' });
+    }
+}
+
+export const getGamesController = async (req: Request, res: Response) => {
+    try {
+        const games: [Game] | [] = await getGames(parseInt(req.query.skip as string, 10), parseInt(req.query.limit as string, 10));
+        res.status(201).json({
+            total: games?.length,
+            games,
+            message: 'Parties récupérées'
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erreur lors de la récupération des parties' });
+    }
+}
+
+export const getGamesByGameModeController = async (req: Request, res: Response) => {
+    try {
+        const games = await getGamesByGameMode(parseInt(req.query.gamemode as string, 10));
+        res.status(201).json({
+            total: games?.length,
+            games,
+            message: 'Parties récupérées'
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: `Erreur lors de la récupération des parties du mode de jeu numéro ${req.query.gamemode}` });
     }
 }

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { skip } from 'node:test';
 
 const prisma = new PrismaClient();
 
@@ -27,10 +28,27 @@ export async function getGame(id: number): Promise<GameInDb | null> {
     return game;
 }
 
-export async function getAllUserGames(userId: number): Promise<[GameInDb] | null> {
-    const games: [GameInDb] | null = await prisma.game.findMany({
-        where: { playerId: userId }
+export async function getAllUserGames(username: string) {
+    const games = await prisma.user.findMany({
+        where: { username: username },
+        select: { Games: true }
     });
+    return games[0].Games;
+}
+
+export async function getGames(offSet: number, limit: number): Promise<[Game] | []> {
+    const games: [Game] | [] = await prisma.game.findMany({
+        skip: offSet,
+        take: limit,
+    });
+    return games;
+}
+
+export async function getGamesByGameMode(gameMode: number) {
+    const games = await prisma.gamemode.findMany({
+        where: { id: gameMode },
+        select: { Game: true }
+    })
     return games;
 }
 
