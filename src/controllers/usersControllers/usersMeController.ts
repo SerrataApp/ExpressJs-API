@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UserPrivateData, UserPublicData, deleteUserMe, getUserPrivateData, updatePlayedGame } from "../../models/userModel";
+import { UserPrivateData, UserPublicData, deleteUser, getUserPrivateData, updatePlayedGame } from "../../models/userModel";
 
 export const getUserMeController = async (req: Request, res: Response) => {
     try {
@@ -21,7 +21,7 @@ export const getUserMeController = async (req: Request, res: Response) => {
 
 export const deleteUserMeController = async (req: Request, res: Response) => {
     try {
-        const user: UserPrivateData | null = await deleteUserMe(req.user.username);
+        const user: UserPrivateData | null = await deleteUser(req.user.username);
 
         if (!user) {
             return res.status(404).json({ error: 'Utilisateur introuvable' });

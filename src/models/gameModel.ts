@@ -69,6 +69,15 @@ export async function deleteGameMe(id: number, playerId: number): Promise<GameIn
     return game;
 }
 
+export async function deleteGame(id: number): Promise<Boolean> {
+    await prisma.game.delete({
+        where: {
+            id: id,
+        }
+    });
+    return true;
+}
+
 export async function updateGameState(id: number): Promise<Boolean> {
     await prisma.game.updateMany({
         data: { public: false }

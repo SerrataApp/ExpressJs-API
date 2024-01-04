@@ -89,11 +89,15 @@ export async function createUser(newUser: UserCreate): Promise<UserPrivateData |
     }
 }
 
-export async function deleteUserMe(username: string): Promise<UserPrivateData | null> {
-    const user: UserPrivateData | null = await prisma.user.delete({
+export async function deleteUser(username: string): Promise<Boolean> {
+    const userId = getPlayerIdByUsername(username);
+    await prisma.game.deleteMany({
+        where: { playerId: userId }
+    })
+    await prisma.user.delete({
         where: { username: username }
     })
-    return user;
+    return true;
 }
 
 export async function updatePlayedGame(username: string): Promise<UserPublicData | null> {
