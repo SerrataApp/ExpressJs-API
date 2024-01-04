@@ -45,11 +45,11 @@ export async function getGames(offSet: number, limit: number): Promise<[Game] | 
 }
 
 export async function getGamesByGameMode(gameMode: number) {
-    const games = await prisma.gamemode.findMany({
+    const games = await prisma.gameMode.findMany({
         where: { id: gameMode },
         select: { Game: true }
     })
-    return games;
+    return games[0].Game;
 }
 
 export async function createGame(newGame: Game): Promise<Game | null> {
@@ -67,6 +67,17 @@ export async function deleteGameMe(id: number, playerId: number): Promise<GameIn
         }
     });
     return game;
+}
+
+export async function updateGameState(id: number): Promise<Boolean> {
+    await prisma.game.updateMany({
+        data: { public: false }
+    });
+    await prisma.game.update({
+        where: { id: id },
+        data: { public: true }
+    })
+    return true
 }
 
 // export async function deleteGame(id: number): Promise<GameInDb | null> {

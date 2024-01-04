@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames, getGames, getGamesByGameMode } from "../models/gameModel";
+import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames, getGames, getGamesByGameMode, updateGameState } from "../models/gameModel";
 import { getPlayerIdByUsername } from "../models/userModel";
 
 export const getGameController = async (req: Request, res: Response) => {
@@ -89,5 +89,17 @@ export const getGamesByGameModeController = async (req: Request, res: Response) 
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: `Erreur lors de la récupération des parties du mode de jeu numéro ${req.query.gamemode}` });
+    }
+}
+
+export const updateGameStateController = async (req: Request, res: Response) => {
+    try {
+        await updateGameState(parseInt(req.query.id as string, 10))
+        res.status(201).json({
+            message: 'Partie mise à jour'
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: `Erreur lors de la modification de la partie` });
     }
 }
