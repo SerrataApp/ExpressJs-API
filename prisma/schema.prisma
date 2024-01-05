@@ -42,7 +42,7 @@ model Game {
 
 model GameMode {
   id          Int               @id @default(autoincrement())
-  name        String
+  name        String            @unique
   description String?
   authorId    Int
   imageList   ImageInGameMode[]
