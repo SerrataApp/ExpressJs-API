@@ -40,12 +40,31 @@ model Game {
 }
 
 model GameMode {
-  id          Int     @id @default(autoincrement())
+  id          Int               @id @default(autoincrement())
   name        String
   description String?
   authorId    Int
+  imageList   ImageInGameMode[]
 
   author User @relation(fields: [authorId], references: [id])
 
   Game Game[]
+}
+
+model Image {
+  id        Int               @id @default(autoincrement())
+  name      String[]
+  img       String
+  gameModes ImageInGameMode[]
+}
+
+model ImageInGameMode {
+  id         Int @id @default(autoincrement())
+  imageId    Int
+  gameModeId Int
+
+  image    Image    @relation(fields: [imageId], references: [id])
+  gameMode GameMode @relation(fields: [gameModeId], references: [id])
+
+  @@unique([imageId, gameModeId])
 }

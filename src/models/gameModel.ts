@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { skip } from 'node:test';
 
 const prisma = new PrismaClient();
 

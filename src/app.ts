@@ -17,8 +17,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/users', usersRoutes);
-app.use('/score', gameRoutes);
-app.use('/scores', gamesRoutes);
+app.use('/game', gameRoutes);
+app.use('/games', gamesRoutes);
 app.use('/admin', ensureAuthenticated, isAdmin, adminRoutes);
 
 app.get('/', (req: Request, res: Response) => {
