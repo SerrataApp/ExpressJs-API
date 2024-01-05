@@ -23,6 +23,7 @@ model User {
 
   Games    Game[]
   GameMode GameMode[]
+  Image    Image[]
 }
 
 model Game {
@@ -52,9 +53,13 @@ model GameMode {
 }
 
 model Image {
-  id        Int               @id @default(autoincrement())
-  name      String[]
-  img       String
+  id       Int      @id @default(autoincrement())
+  name     String[]
+  img      String   @unique
+  authorId Int
+
+  author User @relation(fields: [authorId], references: [id])
+
   gameModes ImageInGameMode[]
 }
 

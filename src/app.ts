@@ -5,6 +5,7 @@ import usersRoutes from './routes/users/usersRoutes';
 import gameRoutes from './routes/games/gameRoutes';
 import gamesRoutes from './routes/games/gamesRoutes';
 import adminRoutes from './routes/admin/adminRoutes'
+import imageRoutes from './routes/images/imageRoutes'
 import { ensureAuthenticated } from "./middleware/loginMiddleware";
 import { isAdmin } from "./middleware/adminMiddleware";
 
@@ -20,6 +21,7 @@ app.use('/users', usersRoutes);
 app.use('/game', gameRoutes);
 app.use('/games', gamesRoutes);
 app.use('/admin', ensureAuthenticated, isAdmin, adminRoutes);
+app.use('/image', imageRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({
