@@ -28,5 +28,5 @@ jobs:
                   docker buildx build \
                     --file Dockerfile \
                     --tag tang0ch4rlie/expressserrata:latest \
-                    --platform linux/amd64,linux/arm64,darwin/amd64 \
+                    --platform linux/amd64,linux/arm64 \
                     --push .
