@@ -10,7 +10,7 @@ export interface Image {
 }
 
 export async function getImage(id: number): Promise<Image | null> {
-    const image: Image = await prisma.image.findUnique({
+    const image: Image | null = await prisma.image.findUnique({
         where: { id: id }
     })
     return image;
