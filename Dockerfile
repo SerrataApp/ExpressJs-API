@@ -1,4 +1,4 @@
-FROM node:19
+FROM node:18
 WORKDIR /usr/src/app
 ENV DATABASE_URL="postgresql://postgres:postgres@db:5432/mydb?schema=public"
 ENV PORT=3000
