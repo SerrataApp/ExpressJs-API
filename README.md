@@ -14,6 +14,7 @@
 
 ```
 git clone https://github.com/SerrataApp/ExpressJs-API.git api_serrata
+cd api_serrata
 docker-compose up -d
 ```
 
