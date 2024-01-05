@@ -1,8 +1,8 @@
 # API Serrata Express.js
 ### Prérequis
 
-- Avoir `npm` et `npx` d'installer sur la machine
-- Avoir **postgresql** d'installer sur la machine
+- Avoir `npm` et `npx` d'installé sur la machine
+- Avoir **postgresql** d'installé sur la machine
 
 ### Installation
 
@@ -20,7 +20,7 @@ SECRET_KEY=""
 ```
 Remplacez les valeurs à changer dans DATABASE_URL, pour ce qui est de SECRET_KEY ouvrez un terminal bash et rentrez la commande `openssl rand -hex 32` ou toute autre commande permettant de générer une clef.
 
-(il y a peut etre des commandes a faire pour initialiser la bd avec prisma si c'est le cas faites `npx prisma migrate dev`)
+(il y a peut etre des commandes a faire pour initialiser la bd avec prisma si c'est le cas faites `npx prisma generate`)
 
 Lancez le projet avec [bun](https://bun.sh/) à la racine du projet
 `bun --hot src/app.ts`
