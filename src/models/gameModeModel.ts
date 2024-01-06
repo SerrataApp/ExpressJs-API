@@ -16,6 +16,13 @@ export async function getGameMode(id: number): Promise<GameMode | null> {
     return gameMode;
 }
 
+export async function getAllImages(id: number) {
+    const images = await prisma.gameMode.findUnique({
+        where: { id: id },
+        select: { imageList: true }
+    })
+}
+
 export async function createGameMode(gameMode: GameMode): Promise<Boolean> {
     await prisma.gameMode.create({
         data: {
