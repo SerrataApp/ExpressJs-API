@@ -18,13 +18,17 @@ export async function createUpdateMode(mode: Mode) {
         data: imageData,
         skipDuplicates: true
     });
+    return;
 }
 
-export async function updateMode(mode: Mode) {
-    const imageData = mode.imageId.map(imageId => ({
-        imageId,
-        gameModeId: mode.gameModeId,
-    }));
-
-
+export async function deleteMode(mode: Mode) {
+    await prisma.imageInGameMode.deleteMany({
+        where: {
+            imageId: {
+                in: mode.imageId,
+            },
+            gameModeId: mode.gameModeId
+        }
+    });
+    return;
 }
