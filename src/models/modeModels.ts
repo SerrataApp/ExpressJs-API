@@ -8,7 +8,7 @@ export interface Mode {
     gameModeId: number
 }
 
-export async function createMode(mode: Mode) {
+export async function createUpdateMode(mode: Mode) {
     const imageData = mode.imageId.map(imageId => ({
         imageId,
         gameModeId: mode.gameModeId,
@@ -18,4 +18,13 @@ export async function createMode(mode: Mode) {
         data: imageData,
         skipDuplicates: true
     });
+}
+
+export async function updateMode(mode: Mode) {
+    const imageData = mode.imageId.map(imageId => ({
+        imageId,
+        gameModeId: mode.gameModeId,
+    }));
+
+
 }

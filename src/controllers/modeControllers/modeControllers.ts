@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { Mode, createMode } from "../../models/modeModels";
+import { Mode, createUpdateMode } from "../../models/modeModels";
 
-export const createModeController = async (req: Request, res: Response) => {
+export const createUpdateModeController = async (req: Request, res: Response) => {
     try {
         let newMode: Mode = req.body;
         const { id, imageId, gameModeId } = newMode;
         newMode = { id, imageId, gameModeId }
-        await createMode(newMode);
+        await createUpdateMode(newMode);
         res.status(201).json({
             message: "Mode created"
         })

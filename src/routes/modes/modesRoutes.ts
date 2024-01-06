@@ -1,8 +1,8 @@
 import express from "express";
-import { createModeController } from "../../controllers/modeControllers/modeControllers";
+import { createUpdateModeController } from "../../controllers/modeControllers/modeControllers";
 
 const router = express.Router();
 
-router.post('/', createModeController);
+router.post('/', createUpdateModeController);
 
 export default router;
