@@ -25,7 +25,7 @@ export const getAllImagesController = async (req: Request, res: Response) => {
             res.status(400).json({ error: 'This game mode doesn\'t exist' });
         } else {
             res.status(200).json({
-                gameMode: images,
+                images,
                 message: `Recovered images from game mode ${req.query.id}`
             })
         }

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { Image } from './imageModels';
 
 const prisma = new PrismaClient();
 
@@ -19,8 +20,22 @@ export async function getGameMode(id: number): Promise<GameMode | null> {
 export async function getAllImages(id: number) {
     const images = await prisma.gameMode.findUnique({
         where: { id: id },
-        select: { imageList: true }
+        select: {
+            imageList: {
+                select: {
+                    image: {
+                        select: {
+                            id: true,
+                            name: true,
+                            img: true,
+                            authorId: true,
+                        },
+                    }
+                }
+            }
+        }
     })
+    return images?.imageList.map((item: any) => item.image);
 }
 
 export async function createGameMode(gameMode: GameMode): Promise<Boolean> {
