@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { Request, Response } from "express";
 import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames, getGames, getGamesByGameMode, updateGameState } from "../../models/gameModel";
 import { getPlayerIdByUsername } from "../../models/userModel";

@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { Request, Response } from "express";
 import { Image, createImage, deleteImage, getImage, updateImage } from "../../models/imageModels";
 

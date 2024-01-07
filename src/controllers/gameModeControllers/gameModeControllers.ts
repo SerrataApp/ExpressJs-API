@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { Request, Response } from "express";
 import { getGameMode, GameMode, createGameMode, updateGameMode, deleteGameMode, getAllImages } from "../../models/gameModeModel";
 

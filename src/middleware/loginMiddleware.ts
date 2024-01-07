@@ -9,6 +9,7 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
     try {
         const token = req.headers.authorization?.split(" ")[1] as string;
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY as string) as { user: UserCreate };
+        //@ts-ignore
         req.user = decodedToken.user;
         return next();
     } catch (error: Error | any) {

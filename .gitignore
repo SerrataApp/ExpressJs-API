@@ -5,3 +5,4 @@ node_modules
 .idea
 backup
 k8s
+dist

@@ -4,8 +4,10 @@ ENV PORT=3000
 COPY package*.json .
 RUN npm install
 COPY . .
-EXPOSE 3000
+RUN npm run build
 RUN npx prisma generate
-RUN npm install -g bun
-CMD ["bun", "--hot", "src/app.ts"]
+# RUN rm -rf node_modules
+# RUN rm -rf src
+EXPOSE 3000
+CMD [ "npm", "run", "prod" ]
 

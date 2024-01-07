@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var gamesController_1 = require("../../controllers/gamesControllers/gamesController");
+var loginMiddleware_1 = require("../../middleware/loginMiddleware");
+var gameMiddleware_1 = require("../../middleware/gameMiddleware");
+var router = express_1.default.Router();
+router.get('/', gamesController_1.getGameController);
+router.post('/', loginMiddleware_1.ensureAuthenticated, gamesController_1.createGameController);
+router.delete('/', loginMiddleware_1.ensureAuthenticated, gameMiddleware_1.isGameOwner, gamesController_1.deleteGameController);
+router.get('/user', gamesController_1.getAllUserGamesController);
+exports.default = router;

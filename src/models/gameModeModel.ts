@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { PrismaClient } from '@prisma/client';
 import { Image } from './imageModels';
 
