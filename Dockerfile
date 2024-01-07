@@ -5,9 +5,7 @@ COPY package*.json .
 RUN npm install
 COPY . .
 EXPOSE 3000
-# RUN npm install -g bun
-# RUN npm install @prisma/client
-# RUN npx prisma generate
-CMD [ "node", "app.js" ]
-# CMD ["bun", "--hot", "src/app.ts"]
+RUN npx prisma generate
+RUN npm install -g bun
+CMD ["bun", "--hot", "src/app.ts"]
 
