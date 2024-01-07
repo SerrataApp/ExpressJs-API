@@ -9,5 +9,5 @@ RUN npx prisma generate
 # RUN rm -rf node_modules
 # RUN rm -rf src
 EXPOSE 3000
-CMD [ "/bin/bash", "-c", "npx prisma generate; npm run prod" ]
+CMD [ "/bin/bash", "-c", "npx prisma migrate dev; npm run prod" ]
 
