@@ -33,6 +33,14 @@ function setPassword(value: String) {
     return bcrypt.hashSync(buffer, 10);
 }
 
+const validateEmail = (email: string) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
 export async function getUserPublicData(username: string): Promise<UserPublicData | null> {
     const user: UserPublicData | null = await prisma.user.findUnique({
         where: { username: username }
@@ -74,7 +82,9 @@ export async function getUserCreate(username: String): Promise<UserCreate | null
     }
 }
 
-export async function createUser(newUser: UserCreate): Promise<UserPrivateData | null> {
+export async function createUser(newUser: UserCreate): Promise<UserPrivateData | null | Boolean> {
+    if (validateEmail(newUser.email) == null)
+        return false
     newUser.password = setPassword(newUser.password)
     const createUser = await prisma.user.create({
         data: newUser,
@@ -82,7 +92,6 @@ export async function createUser(newUser: UserCreate): Promise<UserPrivateData |
     if (createUser) {
         const { id, username, email, playedGames, signupDate, disabled, cgu, admin } = createUser;
         const userPrivateData: UserPrivateData = { id, username, email, playedGames, signupDate, disabled, cgu, admin }
-        console.log(userPrivateData);
         return userPrivateData;
     } else {
         return null;
