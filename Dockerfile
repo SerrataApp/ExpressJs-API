@@ -9,5 +9,5 @@ RUN npx prisma generate
 # RUN rm -rf node_modules
 # RUN rm -rf src
 EXPOSE 3000
-CMD [ "npm", "run", "prod" ]
+CMD [ "npx" "prisma" "generate" && "npm", "run", "prod" ]
 
