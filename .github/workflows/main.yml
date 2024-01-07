@@ -25,8 +25,8 @@ jobs:
                     password: ${{secrets.DOCKERHUB_TOKEN}}
                           
             -   name: Build and push
-                    uses: docker/build-push-action@v4
-                    with:
-                        context: .
-                        push: true
-                        tags: tang0ch4rlie/expressserrata:latest
+                uses: docker/build-push-action@v4
+                with:
+                    context: .
+                    push: true
+                    tags: tang0ch4rlie/expressserrata:latest
