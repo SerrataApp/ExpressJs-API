@@ -8,6 +8,6 @@ EXPOSE 3000
 # RUN npm install -g bun
 # RUN npm install @prisma/client
 # RUN npx prisma generate
-CMD [ "echo", "test" ]
+CMD [ "node", "app.js" ]
 # CMD ["bun", "--hot", "src/app.ts"]
 
