@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx tsc",
     "prod": "node dist/index.js",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --collectCoverage --"
   },
   "author": "",
   "license": "ISC",
