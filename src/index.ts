@@ -28,6 +28,9 @@ app.use('/gameMode', gameModeRoutes);
 app.use('/mode', modeRoutes);
 
 app.get('/', (req: Request, res: Response) => {
+    console.log(
+        req.ip,
+    );
     res.status(200).json({
         message: "Hello Wolrd!"
     })

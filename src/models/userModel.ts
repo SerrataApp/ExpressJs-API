@@ -13,11 +13,14 @@ export interface UserPrivateData extends UserPublicData {
     admin: boolean;
 }
 
-export interface UserCreate {
+export interface UserCreate extends UserUpdate {
     id: number;
+    password: string;
+}
+
+export interface UserUpdate {
     username: string;
     email: string;
-    password: string;
 }
 
 export interface UserPublicData {
@@ -35,11 +38,11 @@ function setPassword(value: String) {
 
 const validateEmail = (email: string) => {
     return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+};
 
 export async function getUserPublicData(username: string): Promise<UserPublicData | null> {
     const user: UserPublicData | null = await prisma.user.findUnique({
@@ -62,7 +65,6 @@ export async function getUserPrivateData(username: string): Promise<UserPrivateD
     if (user) {
         const { id, username, playedGames, email, signupDate, disabled, cgu, admin } = user;
         const UserPrivateData: UserPrivateData = { id, username, playedGames, email, signupDate, disabled, cgu, admin };
-        console.log(UserPrivateData);
         return UserPrivateData;
     } else {
         return null;
@@ -118,6 +120,19 @@ export async function updatePlayedGame(username: string): Promise<UserPublicData
             playedGames: {
                 increment: 1
             }
+        }
+    })
+    return user;
+}
+
+export async function updatePlayerData(id: number, data: UserUpdate): Promise<UserUpdate | null | Boolean> {
+    if (validateEmail(data.email) == null)
+        return false
+    const user: UserUpdate | null = await prisma.user.update({
+        where: { id: id },
+        data: {
+            username: data.username,
+            email: data.email
         }
     })
     return user;
