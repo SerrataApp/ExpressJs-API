@@ -4,5 +4,5 @@ node_modules
 .dockerignore
 .idea
 backup
-k8s
+./k8s
 dist
