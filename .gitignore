@@ -4,6 +4,5 @@ node_modules
 .dockerignore
 .idea
 backup
-./k8s
 dist
 coverage

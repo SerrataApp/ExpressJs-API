@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: serrata-express-api-ingress-https
+  namespace: serrata
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`serrata-db-stats.super-sympa.fr`)
+      kind: Rule
+      services:
+        - name: serrata-api-express-svc
+          port: 3000
+  tls:
+    secretName: serrata-db-certificate-secret
