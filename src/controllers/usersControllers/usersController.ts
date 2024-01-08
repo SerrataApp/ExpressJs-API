@@ -16,10 +16,17 @@ export const createUserController = async (req: Request, res: Response) => {
         newUser = { id, username, email, password };
 
         const createdUser = await createUser(newUser);
-        res.status(201).json({
-            createdUser,
-            message: "Utilisateur créé"
-        });
+        //@ts-ignore
+        if (createdUser == false) {
+            res.status(400).json({
+                message: "L'email n'a pas un format correct"
+            }); 
+        } else {
+            res.status(201).json({
+                createdUser,
+                message: "Utilisateur créé"
+            });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur' });

@@ -1,5 +1,7 @@
+//@ts-nocheck
+
 import { Request, Response } from "express";
-import { getGameMode, GameMode, createGameMode, updateGameMode, deleteGameMode } from "../../models/gameModeModel";
+import { getGameMode, GameMode, createGameMode, updateGameMode, deleteGameMode, getAllImages } from "../../models/gameModeModel";
 
 export const getGameModeController = async (req: Request, res: Response) => {
     try {
@@ -15,6 +17,23 @@ export const getGameModeController = async (req: Request, res: Response) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: `Error during GameMode retrieval : ${error}` });
+    }
+}
+
+export const getAllImagesController = async (req: Request, res: Response) => {
+    try {
+        const images = await getAllImages(parseInt(req.query.id as string, 10));
+        if (images == null) {
+            res.status(400).json({ error: 'This game mode doesn\'t exist' });
+        } else {
+            res.status(200).json({
+                images,
+                message: `Recovered images from game mode ${req.query.id}`
+            })
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: `Error during images retrieval : ${error}` });
     }
 }
 

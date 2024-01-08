@@ -21,7 +21,7 @@ cd api_serrata
 docker-compose up -d
 ```
 
-Ensuite il faut aller dans la console du docker de l'api Express.js et executer la commande npx primsa migrate dev
+Ensuite il faut aller dans la console du docker de l'api Express.js et executer la commande `npx primsa migrate dev`
 
 ### Version galère
 

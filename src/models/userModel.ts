@@ -33,6 +33,14 @@ function setPassword(value: String) {
     return bcrypt.hashSync(buffer, 10);
 }
 
+const validateEmail = (email: string) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
 export async function getUserPublicData(username: string): Promise<UserPublicData | null> {
     const user: UserPublicData | null = await prisma.user.findUnique({
         where: { username: username }
@@ -61,7 +69,7 @@ export async function getUserPrivateData(username: string): Promise<UserPrivateD
     }
 }
 
-export async function getUserCreate(username: String): Promise<UserCreate | null> {
+export async function getUserCreate(username: string): Promise<UserCreate | null> {
     const user: UserCreate | null = await prisma.user.findUnique({
         where: { username: username }
     });
@@ -74,7 +82,9 @@ export async function getUserCreate(username: String): Promise<UserCreate | null
     }
 }
 
-export async function createUser(newUser: UserCreate): Promise<UserPrivateData | null> {
+export async function createUser(newUser: UserCreate): Promise<UserPrivateData | null | Boolean> {
+    if (validateEmail(newUser.email) == null)
+        return false
     newUser.password = setPassword(newUser.password)
     const createUser = await prisma.user.create({
         data: newUser,
@@ -82,7 +92,6 @@ export async function createUser(newUser: UserCreate): Promise<UserPrivateData |
     if (createUser) {
         const { id, username, email, playedGames, signupDate, disabled, cgu, admin } = createUser;
         const userPrivateData: UserPrivateData = { id, username, email, playedGames, signupDate, disabled, cgu, admin }
-        console.log(userPrivateData);
         return userPrivateData;
     } else {
         return null;
@@ -90,13 +99,15 @@ export async function createUser(newUser: UserCreate): Promise<UserPrivateData |
 }
 
 export async function deleteUser(username: string): Promise<Boolean> {
-    const userId = getPlayerIdByUsername(username);
-    await prisma.game.deleteMany({
-        where: { playerId: userId }
-    })
-    await prisma.user.delete({
-        where: { username: username }
-    })
+    const userId = await getPlayerIdByUsername(username);
+    if (userId) {
+        await prisma.game.deleteMany({
+            where: { playerId: userId }
+        })
+        await prisma.user.delete({
+            where: { username: username }
+        })
+    }
     return true;
 }
 
@@ -112,7 +123,7 @@ export async function updatePlayedGame(username: string): Promise<UserPublicData
     return user;
 }
 
-export async function getPlayerIdByUsername(username: string): Promise<number> {
+export async function getPlayerIdByUsername(username: string): Promise<number | null> {
     const user_id = await prisma.user.findUnique({
         where: {
             username: username
@@ -121,7 +132,10 @@ export async function getPlayerIdByUsername(username: string): Promise<number> {
             id: true
         }
     });
-    return user_id.id;
+    if (user_id)
+        return user_id.id;
+    else
+        return null
 }
 
 export async function getUserAllData(id: number) {
@@ -140,7 +154,7 @@ export async function disableUser(id: number): Promise<Boolean> {
         where: { id: id },
         select: { disabled: true }
     });
-
+    //@ts-ignore
     const newDisabledState = !user.disabled;
 
     await prisma.user.update({
@@ -156,5 +170,6 @@ export async function getAdminField(id: number): Promise<Boolean> {
         where: { id: id },
         select: { admin: true }
     });
+    //@ts-ignore
     return userAdmin.admin;
 }

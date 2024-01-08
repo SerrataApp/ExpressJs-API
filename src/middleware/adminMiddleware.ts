@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { Request, Response, NextFunction } from 'express';
 import { getAdminField } from '../models/userModel';
 
