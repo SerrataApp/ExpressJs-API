@@ -50,4 +50,4 @@ jobs:
             -   name: Deploy to cluster
                 run: 
                     sed -i'' -e 's/IMAGE_LABEL/${{ steps.commit.outputs.short }}/g' ../k8s/deployment.yml
-                    kubectl apply -f deployment.yml
+                    kubectl apply -f ../k8s/deployment.yml
