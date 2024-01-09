@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 import { Request, Response } from "express";
-import { UserPrivateData, UserPublicData, deleteUser, getUserPrivateData, updatePlayedGame } from "../../models/userModel";
+import { UserPrivateData, UserPublicData, UserUpdate, deleteUser, getUserPrivateData, updatePlayedGame, updatePlayerData } from "../../models/userModel";
 
 export const getUserMeController = async (req: Request, res: Response) => {
     try {
@@ -40,18 +40,33 @@ export const deleteUserMeController = async (req: Request, res: Response) => {
 
 export const updatePlayedGameController = async (req: Request, res: Response) => {
     try {
-        const user: UserPublicData | null = await updatePlayedGame(req.user.username);
-
-        if (!user) {
-            return res.status(404).json({ error: 'Utilisateur introuvable' });
-        }
+        await updatePlayedGame(req.user.username);
 
         res.status(200).json({
-            user,
-            message: "Une partie à été ajouté"
+            message: "Game updated"
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erreur lors de l\'ajout d\'une partie au conteur' });
+    }
+}
+
+export const updatePlayerDataController = async (req: Request, res: Response) => {
+    try {
+        console.log(req.user.email, req.user.username);
+        const user: UserUpdate = {
+            email: req.body.email || req.user.email,
+            username: req.body.username || req.user.username
+        };
+
+        if (await updatePlayerData(req.user.id, user) === false)
+            res.status(200).json({ message: "Email is not correct" });
+
+        res.status(200).json({
+            message: "User updated"
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error during updating user' });
     }
 }

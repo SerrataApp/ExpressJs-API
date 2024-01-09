@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "dev": "npx ts-node .\\src\\index.ts",
     "build": "npx tsc",
     "prod": "node dist/index.js",
     "test": "jest",
