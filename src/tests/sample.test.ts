@@ -15,11 +15,11 @@ describe('Test /users', () => {
       // Call the createUser function with the mockUserCreate object
       let result: UserPrivateData | Boolean | null = await createUser(mockUserCreate as User);
 
-      const { id, signupDate, ...expectedResult } = {
+      const test = {
         //@ts-ignore
-        id: result?.id,
+        id: result.id,
         //@ts-ignore
-        signupDate: result?.signupDate,
+        signupDate: result.signupDate,
         admin: false,
         cgu: false,
         disabled: false,
@@ -28,10 +28,9 @@ describe('Test /users', () => {
         username: "test123"
       };
 
-
       await deleteUser("test123");
-      // Add your assertions based on the expected behavior of the createUser function
-      expect(result).toEqual(expectedResult);
+
+      expect(result).toEqual(test);
 
     });
   });
