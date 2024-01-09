@@ -18,6 +18,7 @@ jobs:
                     node-version: 18.x
             -       run: npm install
             -       run: npm test
+
     build_and_push:
         name: Build Docker image
         needs: test
