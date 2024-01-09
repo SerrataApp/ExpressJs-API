@@ -82,7 +82,7 @@ export const loginUserController = async (req: Request, res: Response) => {
         const token = jwt.sign(
             { user },
             process.env.SECRET_KEY as string,
-            { expiresIn: "2h" }
+            { expiresIn: "24h" }
         );
         res.json({
             token,
