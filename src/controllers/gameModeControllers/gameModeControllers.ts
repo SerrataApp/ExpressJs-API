@@ -15,8 +15,13 @@ export const getGameModeController = async (req: Request, res: Response) => {
             })
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during GameMode retrieval : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -32,8 +37,13 @@ export const getAllImagesController = async (req: Request, res: Response) => {
             })
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during images retrieval : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -46,8 +56,19 @@ export const createGameModeController = async (req: Request, res: Response) => {
         await createGameMode(newGameMode)
         res.status(201).json({ message: "Game mode created" })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during GameMode creation : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                return res.status(400).json({
+                    error: "There is a unique constraint violation, user cannot be updated",
+                    field: error.meta?.target
+                })
+            }
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -60,8 +81,19 @@ export const updateGameModeController = async (req: Request, res: Response) => {
         await updateGameMode(GameModeId, GameModeToUpdate)
         res.status(200).json({ message: "Game mode updated" })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during GameMode update : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                return res.status(400).json({
+                    error: "There is a unique constraint violation, user cannot be updated",
+                    field: error.meta?.target
+                })
+            }
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -70,7 +102,12 @@ export const deleteGameModeController = async (req: Request, res: Response) => {
         await deleteGameMode(parseInt(req.query.id as string, 10));
         res.status(200).json({ message: "Game mode deleted" })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during GameMode delete : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }

@@ -35,7 +35,7 @@ export const createGameController = async (req: Request, res: Response) => {
 
         await createGame(newGame);
         res.status(201).json({
-            message: "Partie créée"
+            message: "Created game"
         });
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
