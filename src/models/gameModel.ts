@@ -120,10 +120,3 @@ export async function updateGameState(id: number): Promise<Boolean> {
         throw error;
     }
 }
-
-// export async function deleteGame(id: number): Promise<GameInDb | null> {
-//     const game: GameInDb | null = await prisma.game.delete({
-//         where: { id: id }
-//     });
-//     return game;
-// }
