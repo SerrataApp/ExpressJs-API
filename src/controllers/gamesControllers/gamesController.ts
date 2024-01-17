@@ -10,16 +10,21 @@ export const getGameController = async (req: Request, res: Response) => {
         const game: GameInDb | null = await getGame(game_id);
 
         if (!game) {
-            return res.status(404).json({ error: 'Partie introuvable' });
+            return res.status(404).json({ error: 'Game not found' });
         }
 
         res.status(200).json({
             game,
-            message: "Partie récupérée"
+            message: "Recovered game"
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erreur lors de la récupération de la partie' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -33,8 +38,13 @@ export const createGameController = async (req: Request, res: Response) => {
             message: "Partie créée"
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erreur lors de la création de la partie' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -44,11 +54,16 @@ export const deleteGameController = async (req: Request, res: Response) => {
 
         await deleteGameMe(gameId, req.user.id);
         res.status(201).json({
-            message: "Partie supprimée"
+            message: "Deleted game"
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erreur lors de la suppression de la partie' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -58,11 +73,16 @@ export const getAllUserGamesController = async (req: Request, res: Response) => 
         res.status(201).json({
             total: games?.length,
             games,
-            message: `Parties de l'utilisateur ${req.query.username}`
+            message: `User games ${req.query.username}`
         })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erreur lors de la récupération des parties de l\'utilisateur' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -72,11 +92,16 @@ export const getGamesController = async (req: Request, res: Response) => {
         res.status(201).json({
             total: games?.length,
             games,
-            message: 'Parties récupérées'
+            message: 'Recovered game'
         })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erreur lors de la récupération des parties' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -86,11 +111,16 @@ export const getGamesByGameModeController = async (req: Request, res: Response) 
         res.status(201).json({
             total: games?.length,
             games,
-            message: 'Parties récupérées'
+            message: 'Recovered game'
         })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Erreur lors de la récupération des parties du mode de jeu numéro ${req.query.gamemode}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -98,10 +128,15 @@ export const updateGameStateController = async (req: Request, res: Response) => 
     try {
         await updateGameState(parseInt(req.query.id as string, 10))
         res.status(201).json({
-            message: 'Partie mise à jour'
+            message: 'Game updated'
         })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Erreur lors de la modification de la partie` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }

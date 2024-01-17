@@ -22,71 +22,103 @@ export interface GameInDb extends Game {
 //-------------Fonctions de traitement-------------
 
 export async function getGame(id: number): Promise<GameInDb | null> {
-    const game: GameInDb | null = await prisma.game.findUnique({
-        where: { id: id }
-    });
-    return game;
+    try {
+        const game: GameInDb | null = await prisma.game.findUnique({
+            where: { id: id }
+        });
+        return game;
+    } catch (error) {
+        throw error;
+    }
 }
 
-export async function getAllUserGames(username: string) {
-    const games = await prisma.user.findMany({
-        where: { username: username },
-        select: { Games: true }
-    });
-    return games[0].Games;
+export async function getAllUserGames(username: string): Promise<[]> {
+    try {
+        const games = await prisma.user.findMany({
+            where: { username: username },
+            select: { Games: true }
+        });
+        return games[0].Games;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function getGames(offSet: number, limit: number): Promise<[Game] | []> {
-    const games: [Game] | [] = await prisma.game.findMany({
-        skip: offSet,
-        take: limit,
-    });
-    return games;
+    try {
+        const games: [Game] | [] = await prisma.game.findMany({
+            skip: offSet,
+            take: limit,
+        });
+        return games;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function getGamesByGameMode(gameMode: number) {
-    const games = await prisma.gameMode.findMany({
-        where: { id: gameMode },
-        select: { Game: true }
-    })
-    return games[0].Game;
+    try {
+        const games = await prisma.gameMode.findMany({
+            where: { id: gameMode },
+            select: { Game: true }
+        })
+        return games[0].Game;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function createGame(newGame: Game): Promise<Game | null> {
-    const game: Game | null = await prisma.game.create({
-        data: newGame
-    });
-    return game;
+    try {
+        const game: Game | null = await prisma.game.create({
+            data: newGame
+        });
+        return game;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function deleteGameMe(id: number, playerId: number): Promise<GameInDb | null> {
-    const game: GameInDb | null = await prisma.game.delete({
-        where: {
-            id: id,
-            playerId: playerId
-        }
-    });
-    return game;
+    try {
+        const game: GameInDb | null = await prisma.game.delete({
+            where: {
+                id: id,
+                playerId: playerId
+            }
+        });
+        return game;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function deleteGame(id: number): Promise<Boolean> {
-    await prisma.game.delete({
-        where: {
-            id: id,
-        }
-    });
-    return true;
+    try {
+        await prisma.game.delete({
+            where: {
+                id: id,
+            }
+        });
+        return true;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function updateGameState(id: number): Promise<Boolean> {
-    await prisma.game.updateMany({
-        data: { public: false }
-    });
-    await prisma.game.update({
-        where: { id: id },
-        data: { public: true }
-    })
-    return true
+    try {
+        await prisma.game.updateMany({
+            data: { public: false }
+        });
+        await prisma.game.update({
+            where: { id: id },
+            data: { public: true }
+        })
+        return true
+    } catch (error) {
+        throw error;
+    }
 }
 
 // export async function deleteGame(id: number): Promise<GameInDb | null> {
