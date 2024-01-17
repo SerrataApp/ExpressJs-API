@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate, getUserAllData } from '../../models/userModel';
+import { Prisma } from "@prisma/client";
 
 // TODO changer les numero de status d'erreur
 
@@ -16,10 +17,9 @@ export const createUserController = async (req: Request, res: Response) => {
         newUser = { id, username, email, password };
 
         const createdUser = await createUser(newUser);
-        //@ts-ignore
         if (createdUser == false) {
             res.status(400).json({
-                message: "L'email n'a pas un format correct"
+                error: "Incorrect e-mail address format"
             }); 
         } else {
             res.status(201).json({
@@ -29,7 +29,16 @@ export const createUserController = async (req: Request, res: Response) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                res.status(400).json({
+                    error: "There is a unique constraint violation, a new user cannot be created",
+                    field: error.meta?.target
+                })
+            }
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 

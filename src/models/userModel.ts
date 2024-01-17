@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -84,19 +84,20 @@ export async function getUserCreate(username: string): Promise<UserCreate | null
     }
 }
 
-export async function createUser(newUser: UserCreate): Promise<UserPrivateData | null | Boolean> {
+export async function createUser(newUser: UserCreate): Promise<UserPrivateData | Boolean> {
     if (validateEmail(newUser.email) == null)
         return false
     newUser.password = setPassword(newUser.password)
-    const createUser = await prisma.user.create({
-        data: newUser,
-    });
-    if (createUser) {
+    try {
+        const createUser = await prisma.user.create({
+            data: newUser,
+        });
         const { id, username, email, playedGames, signupDate, disabled, cgu, admin } = createUser;
         const userPrivateData: UserPrivateData = { id, username, email, playedGames, signupDate, disabled, cgu, admin }
-        return userPrivateData;
-    } else {
-        return null;
+        return userPrivateData;     
+    } catch (e) {
+        console.error("Error in the createUser: ", e);
+        throw e;
     }
 }
 
