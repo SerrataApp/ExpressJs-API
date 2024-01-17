@@ -9,26 +9,36 @@ export interface Mode {
 }
 
 export async function createUpdateMode(mode: Mode) {
-    const imageData = mode.imageId.map(imageId => ({
-        imageId,
-        gameModeId: mode.gameModeId,
-    }));
-
-    await prisma.imageInGameMode.createMany({
-        data: imageData,
-        skipDuplicates: true
-    });
-    return;
+    try {
+        const imageData = mode.imageId.map(imageId => ({
+            imageId,
+            gameModeId: mode.gameModeId,
+        }));
+    
+        await prisma.imageInGameMode.createMany({
+            data: imageData,
+            skipDuplicates: true
+        });
+        return;
+    } catch (error) {
+        console.error("Error in the updatePlayerData: ", error);
+        throw error;
+    }
 }
 
 export async function deleteMode(mode: Mode) {
-    await prisma.imageInGameMode.deleteMany({
-        where: {
-            imageId: {
-                in: mode.imageId,
-            },
-            gameModeId: mode.gameModeId
-        }
-    });
-    return;
+    try {
+        await prisma.imageInGameMode.deleteMany({
+            where: {
+                imageId: {
+                    in: mode.imageId,
+                },
+                gameModeId: mode.gameModeId
+            }
+        });
+        return;
+    } catch (error) {
+        console.error("Error in the updatePlayerData: ", error);
+        throw error;
+    }
 }

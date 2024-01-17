@@ -25,7 +25,7 @@ app.use('/games', gamesRoutes);
 app.use('/admin', ensureAuthenticated, isAdmin, adminRoutes);
 app.use('/image', imageRoutes);
 app.use('/gameMode', gameModeRoutes);
-app.use('/mode', modeRoutes);
+app.use('/mode', ensureAuthenticated, modeRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     console.log(
