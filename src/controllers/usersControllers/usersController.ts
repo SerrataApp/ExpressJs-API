@@ -4,8 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate, getUserAllData } from '../../models/userModel';
 import { Prisma } from "@prisma/client";
-
-// TODO changer les numero de status d'erreur
+import { userNotFound } from "../../error/UserNotFound";
 
 dotenv.config();
 
@@ -24,11 +23,10 @@ export const createUserController = async (req: Request, res: Response) => {
         } else {
             res.status(201).json({
                 createdUser,
-                message: "Utilisateur créé"
+                message: "User created"
             });
         }
     } catch (error) {
-        console.error(error);
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 res.status(400).json({
@@ -47,28 +45,33 @@ export const getUserController = async (req: Request, res: Response) => {
         const username = req.query.username as string;
 
         if (!username) {
-            return res.status(400).json({ error: 'Veuillez préciser un nom d\'utilisateur' });
+            return res.status(400).json({ error: 'Please specify a username' });
         }
         const user: UserPublicData | null = await getUserPublicData(username);
 
         if (!user) {
-            return res.status(404).json({ error: 'Utilisateur introuvable' });
+            return userNotFound(res)
         }
 
         res.status(200).json({
             user,
-            message: "Utilsateur récupéré"
+            message: "Recovered user"
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
 export const loginUserController = async (req: Request, res: Response) => {
     if (!req.body) {
-        return res.status(404).json({
-            error: 'Utilisateur introuvable',
+        return res.status(400).json({
+            error: 'Wrong request format',
             format: {
                 username: "string",
                 password: "string"
@@ -83,10 +86,9 @@ export const loginUserController = async (req: Request, res: Response) => {
     const user: UserCreate | null = await getUserCreate(userToLogin.username);
 
     if (!user) {
-        return res.status(404).json({
-            error: 'Utilisateur introuvable'
-        });
+        return userNotFound(res);
     }
+
     if (bcrypt.compareSync(userToLogin.password, user.password)) {
         const token = jwt.sign(
             { user },
@@ -99,15 +101,7 @@ export const loginUserController = async (req: Request, res: Response) => {
         })
     } else {
         res.status(401).json({
-            message: "Mauvais mot de passe"
+            error: "Wrong password"
         });
     }
-}
-
-export const test = async (req: Request, res: Response) => {
-    const userId: number = parseInt(req.query.id as string, 10);
-    const user = await getUserAllData(userId);
-    res.status(200).json({
-        user
-    })
 }

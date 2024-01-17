@@ -45,42 +45,56 @@ const validateEmail = (email: string) => {
 };
 
 export async function getUserPublicData(username: string): Promise<UserPublicData | null> {
-    const user: UserPublicData | null = await prisma.user.findUnique({
-        where: { username: username }
-    });
-    if (user) {
-        const { id, username, playedGames } = user;
-        const userPublicData: UserPublicData = { id, username, playedGames };
-        console.log(userPublicData);
-        return userPublicData;
-    } else {
-        return null;
+    try {
+        const user: UserPublicData | null = await prisma.user.findUnique({
+            where: { username: username }
+        });
+        if (user) {
+            const { id, username, playedGames } = user;
+            const userPublicData: UserPublicData = { id, username, playedGames };
+            return userPublicData;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in the getUser: ", error);
+        throw error;
     }
 }
 
 export async function getUserPrivateData(username: string): Promise<UserPrivateData | null> {
-    const user: UserPrivateData | null = await prisma.user.findUnique({
-        where: { username: username }
-    });
-    if (user) {
-        const { id, username, playedGames, email, signupDate, disabled, cgu, admin } = user;
-        const UserPrivateData: UserPrivateData = { id, username, playedGames, email, signupDate, disabled, cgu, admin };
-        return UserPrivateData;
-    } else {
-        return null;
+    try {
+        const user: UserPrivateData | null = await prisma.user.findUnique({
+            where: { username: username }
+        });
+        if (user) {
+            const { id, username, playedGames, email, signupDate, disabled, cgu, admin } = user;
+            const UserPrivateData: UserPrivateData = { id, username, playedGames, email, signupDate, disabled, cgu, admin };
+            return UserPrivateData;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in the getUser: ", error);
+        throw error;
     }
 }
 
 export async function getUserCreate(username: string): Promise<UserCreate | null> {
-    const user: UserCreate | null = await prisma.user.findUnique({
-        where: { username: username }
-    });
-    if (user) {
-        const { id, username, email, password } = user;
-        const UserCreate: UserCreate = { id, username, email, password };
-        return UserCreate;
-    } else {
-        return null;
+    try {
+        const user: UserCreate | null = await prisma.user.findUnique({
+            where: { username: username }
+        });
+        if (user) {
+            const { id, username, email, password } = user;
+            const UserCreate: UserCreate = { id, username, email, password };
+            return UserCreate;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in the getUser: ", error);
+        throw error;
     }
 }
 
@@ -95,9 +109,9 @@ export async function createUser(newUser: UserCreate): Promise<UserPrivateData |
         const { id, username, email, playedGames, signupDate, disabled, cgu, admin } = createUser;
         const userPrivateData: UserPrivateData = { id, username, email, playedGames, signupDate, disabled, cgu, admin }
         return userPrivateData;     
-    } catch (e) {
-        console.error("Error in the createUser: ", e);
-        throw e;
+    } catch (error) {
+        console.error("Error in the createUser: ", error);
+        throw error;
     }
 }
 
