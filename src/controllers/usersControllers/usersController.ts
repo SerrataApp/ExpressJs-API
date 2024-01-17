@@ -10,6 +10,16 @@ dotenv.config();
 
 export const createUserController = async (req: Request, res: Response) => {
     try {
+        if (!req.body || !req.body.username || !req.body.email || !req.body.password) {
+            return res.status(400).json({
+                error: 'Wrong request format',
+                format: {
+                    username: "string",
+                    email: "string",
+                    password: "string"
+                }
+            });
+        }
         let newUser: UserCreate = req.body;
 
         const { id, username, email, password } = newUser;
