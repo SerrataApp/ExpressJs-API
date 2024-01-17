@@ -94,7 +94,7 @@ export const updatePlayerDataController = async (req: Request, res: Response) =>
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(400).json({
-                    error: "There is a unique constraint violation, a new user cannot be updated",
+                    error: "There is a unique constraint violation, user cannot be updated",
                     field: error.meta?.target
                 })
             }
