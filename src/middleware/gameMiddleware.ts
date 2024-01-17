@@ -10,9 +10,15 @@ export const isGameOwner = async (req: Request, res: Response, next: NextFunctio
         if (game?.playerId === req.user.id) {
             return next();
         } else {
-            return res.status(401).json({ message: "Vous n'avez pas le droit modifier une partie qui n'est pas la votre." });
+            return res.status(401).json({ message: "You are not allowed to modify a part that is not yours." });
         }
     } catch {
-        return res.status(500).json({ message: "Une erreur s'est produite lors de la vérification des données" });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            return res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            return res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
