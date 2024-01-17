@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate, getUserAllData } from '../../models/userModel';
 import { Prisma } from "@prisma/client";
-import { userNotFound } from "../../error/UserNotFound";
+import { userNotFound } from "../../error/userNotFound";
 
 dotenv.config();
 
@@ -29,11 +29,14 @@ export const createUserController = async (req: Request, res: Response) => {
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
-                res.status(400).json({
+                return res.status(400).json({
                     error: "There is a unique constraint violation, a new user cannot be created",
                     field: error.meta?.target
                 })
             }
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
         } else {
             res.status(500).json({ error: 'Internal server error' });
         }
@@ -69,7 +72,7 @@ export const getUserController = async (req: Request, res: Response) => {
 }
 
 export const loginUserController = async (req: Request, res: Response) => {
-    if (!req.body) {
+    if (!req.body || (!req.body.username && !req.body.email)) {
         return res.status(400).json({
             error: 'Wrong request format',
             format: {
