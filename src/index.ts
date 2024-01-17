@@ -10,6 +10,7 @@ import gameModeRoutes from './routes/gameModes/gameModeRoutes'
 import modeRoutes from './routes/modes/modesRoutes'
 import { ensureAuthenticated } from "./middleware/loginMiddleware";
 import { isAdmin } from "./middleware/adminMiddleware";
+import { isModeOwner } from "./middleware/modeMiddleware";
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ app.use('/games', gamesRoutes);
 app.use('/admin', ensureAuthenticated, isAdmin, adminRoutes);
 app.use('/image', imageRoutes);
 app.use('/gameMode', gameModeRoutes);
-app.use('/mode', ensureAuthenticated, modeRoutes);
+app.use('/mode', ensureAuthenticated, isModeOwner, modeRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     console.log(
