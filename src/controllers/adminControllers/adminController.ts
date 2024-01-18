@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { deleteUser, disableUser } from "../../models/userModel";
 import { deleteGame } from "../../models/gameModel";
 import { Prisma } from "@prisma/client";
+import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const disableUserController = async (req: Request, res: Response) => {
     try {
@@ -12,7 +13,7 @@ export const disableUserController = async (req: Request, res: Response) => {
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -31,7 +32,7 @@ export const deleteAnyGameController = async (req: Request, res: Response) => {
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -50,7 +51,7 @@ export const deleteAnyUserController = async (req: Request, res: Response) => {
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",

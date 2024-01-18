@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { UserCreate } from '../models/userModel';
 import { Prisma } from '@prisma/client';
+import { addGitHubIssue } from '../utils/githubIssues';
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
         return next();
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            return await addGitHubIssue(error)
+            return addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",

@@ -15,7 +15,7 @@ export const isImageOwner = async (req: Request, res: Response, next: NextFuncti
         }
     } catch {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            return await addGitHubIssue(error)
+            return addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",

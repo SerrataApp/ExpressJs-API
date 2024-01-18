@@ -12,7 +12,7 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
             res.status(401).json({ message: "You are not admin" });
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            return await addGitHubIssue(error)
+            return addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",

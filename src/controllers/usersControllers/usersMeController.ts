@@ -18,7 +18,7 @@ export const getUserMeController = async (req: Request, res: Response) => {
         });
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -42,7 +42,7 @@ export const deleteUserMeController = async (req: Request, res: Response) => {
         });
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -62,7 +62,7 @@ export const updatePlayedGameController = async (req: Request, res: Response) =>
         });
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -104,7 +104,7 @@ export const updatePlayerDataController = async (req: Request, res: Response) =>
                     field: error.meta?.target
                 })
             }
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",

@@ -16,7 +16,7 @@ export const getGameModeController = async (req: Request, res: Response) => {
         }
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -40,7 +40,7 @@ export const getAllImagesController = async (req: Request, res: Response) => {
         }
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -67,7 +67,7 @@ export const createGameModeController = async (req: Request, res: Response) => {
                     field: error.meta?.target
                 })
             }
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -94,7 +94,7 @@ export const updateGameModeController = async (req: Request, res: Response) => {
                     field: error.meta?.target
                 })
             }
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -111,7 +111,7 @@ export const deleteGameModeController = async (req: Request, res: Response) => {
         res.status(200).json({ message: "Game mode deleted" })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",

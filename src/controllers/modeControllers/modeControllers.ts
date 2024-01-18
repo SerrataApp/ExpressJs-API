@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Mode, createUpdateMode, deleteMode } from "../../models/modeModels";
 import { Prisma } from "@prisma/client";
+import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const createUpdateModeController = async (req: Request, res: Response) => {
     checkBodyRequest(req, res);
@@ -28,7 +29,7 @@ export const createUpdateModeController = async (req: Request, res: Response) =>
                     field: error.meta?.field_name
                 })
             }
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
@@ -51,7 +52,7 @@ export const deleteModeController = async (req: Request, res: Response) => {
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            await addGitHubIssue(error)
+            addGitHubIssue(error)
             
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
