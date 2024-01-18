@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/core";
 import { restEndpointMethods } from "@octokit/plugin-rest-endpoint-methods";
 import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,7 +9,7 @@ dotenv.config();
 const MyOctokit = Octokit.plugin(restEndpointMethods);
 const octokit = new MyOctokit({ auth: process.env.PERSONNAL_TOKEN });
 
-export const addGitHubIssue = async (error: Prisma.PrismaClientKnownRequestError) => {
+export const addGitHubIssue = async (error: PrismaClientKnownRequestError) => {
     await octokit.request('POST /repos/SerrataApp/ExpressJs-API/issues', {
         owner: 'SerrataApp',
         repo: 'ExpressJs-API',

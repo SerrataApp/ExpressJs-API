@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate, getUserAllData } from '../../models/userModel';
 import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { userNotFound } from "../../error/userNotFound";
 import { addGitHubIssue } from "../../utils/githubIssues";
 
@@ -38,7 +39,7 @@ export const createUserController = async (req: Request, res: Response) => {
             });
         }
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(400).json({
                     error: "There is a unique constraint violation, a new user cannot be created",
@@ -74,7 +75,7 @@ export const getUserController = async (req: Request, res: Response) => {
             message: "Recovered user"
         });
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -124,7 +125,7 @@ export const loginUserController = async (req: Request, res: Response) => {
             });
         }
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({

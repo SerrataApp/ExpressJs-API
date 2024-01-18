@@ -15,7 +15,7 @@
   "dependencies": {
     "@octokit/core": "^5.0.2",
     "@octokit/plugin-rest-endpoint-methods": "^10.2.0",
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^5.8.1",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
