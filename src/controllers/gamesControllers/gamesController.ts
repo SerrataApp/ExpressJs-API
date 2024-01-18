@@ -19,6 +19,8 @@ export const getGameController = async (req: Request, res: Response) => {
         });
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -39,6 +41,8 @@ export const createGameController = async (req: Request, res: Response) => {
         });
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -58,6 +62,8 @@ export const deleteGameController = async (req: Request, res: Response) => {
         });
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -77,6 +83,8 @@ export const getAllUserGamesController = async (req: Request, res: Response) => 
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -96,6 +104,8 @@ export const getGamesController = async (req: Request, res: Response) => {
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -115,6 +125,8 @@ export const getGamesByGameModeController = async (req: Request, res: Response) 
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -132,6 +144,8 @@ export const updateGameStateController = async (req: Request, res: Response) => 
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })

@@ -15,7 +15,9 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
         return next();
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            return res.status(500).json({
+            return await addGitHubIssue(error)
+            
+            res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
         } else {

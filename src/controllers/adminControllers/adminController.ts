@@ -12,6 +12,8 @@ export const disableUserController = async (req: Request, res: Response) => {
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -29,6 +31,8 @@ export const deleteAnyGameController = async (req: Request, res: Response) => {
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -46,6 +50,8 @@ export const deleteAnyUserController = async (req: Request, res: Response) => {
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })

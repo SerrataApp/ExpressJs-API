@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate, getUserAllData } from '../../models/userModel';
 import { Prisma } from "@prisma/client";
 import { userNotFound } from "../../error/userNotFound";
+import { addGitHubIssue } from "../../utils/githubIssues";
 
 dotenv.config();
 
@@ -34,6 +35,8 @@ export const createUserController = async (req: Request, res: Response) => {
                     field: error.meta?.target
                 })
             }
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -62,6 +65,8 @@ export const getUserController = async (req: Request, res: Response) => {
         });
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -86,25 +91,37 @@ export const loginUserController = async (req: Request, res: Response) => {
     const { id, username, email, password } = userToLogin;
     userToLogin = { id, username, email, password };
 
-    const user: UserCreate | null = await getUserCreate(userToLogin.username);
-
-    if (!user) {
-        return userNotFound(res);
-    }
-
-    if (bcrypt.compareSync(userToLogin.password, user.password)) {
-        const token = jwt.sign(
-            { user },
-            process.env.SECRET_KEY as string,
-            { expiresIn: "24h" }
-        );
-        res.json({
-            token,
-            token_type: "Bearer"
-        })
-    } else {
-        res.status(401).json({
-            error: "Wrong password"
-        });
+    try {
+        const user: UserCreate | null = await getUserCreate(userToLogin.username);
+    
+        if (!user) {
+            return userNotFound(res);
+        }
+    
+        if (bcrypt.compareSync(userToLogin.password, user.password)) {
+            const token = jwt.sign(
+                { user },
+                process.env.SECRET_KEY as string,
+                { expiresIn: "24h" }
+            );
+            res.json({
+                token,
+                token_type: "Bearer"
+            })
+        } else {
+            res.status(401).json({
+                error: "Wrong password"
+            });
+        }
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }

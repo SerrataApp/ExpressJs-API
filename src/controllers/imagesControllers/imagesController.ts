@@ -16,6 +16,8 @@ export const getImageController = async (req: Request, res: Response) => {
         }
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -41,6 +43,8 @@ export const createImageController = async (req: Request, res: Response) => {
                     field: error.meta?.target
                 })
             }
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -66,6 +70,8 @@ export const updateImageController = async (req: Request, res: Response) => {
                     field: error.meta?.target
                 })
             }
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -81,6 +87,8 @@ export const deleteImageController = async (req: Request, res: Response) => {
         res.status(200).json({ message: "Image deleted" })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })

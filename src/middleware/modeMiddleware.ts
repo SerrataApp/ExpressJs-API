@@ -14,6 +14,8 @@ export const isModeOwner = async (req: Request, res: Response, next: NextFunctio
         }
     } catch {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })

@@ -28,6 +28,8 @@ export const createUpdateModeController = async (req: Request, res: Response) =>
                     field: error.meta?.field_name
                 })
             }
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -49,6 +51,8 @@ export const deleteModeController = async (req: Request, res: Response) => {
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            await addGitHubIssue(error)
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })

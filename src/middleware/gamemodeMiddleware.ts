@@ -14,7 +14,9 @@ export const isGameModeOwner = async (req: Request, res: Response, next: NextFun
         }
     } catch {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-            return res.status(500).json({
+            return await addGitHubIssue(error)
+            
+            res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
         } else {
