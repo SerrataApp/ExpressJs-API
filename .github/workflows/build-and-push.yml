@@ -1,10 +1,16 @@
 name: node_express_app
 
-on: 
-    workflow_run:
-        workflows: ["test-api"]
-        types:
-            - completed
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:    
+            - main
+    # workflow_run:
+    #     workflows: ["test-api"]
+    #     types:
+    #         - completed
 jobs:
     build_and_push:
         name: Build Docker image
