@@ -1,5 +1,4 @@
 //@ts-nocheck
-import { Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { Request, Response } from "express";
 import { UserPrivateData, UserUpdate, deleteUser, getUserPrivateData, updatePlayedGame, updatePlayerData } from "../../models/userModel";
