@@ -87,7 +87,7 @@ export const getUserController = async (req: Request, res: Response) => {
 }
 
 export const loginUserController = async (req: Request, res: Response) => {
-    if (!req.body || (!req.body.username && !req.body.email)) {
+    if (!req.body || (!req.body.username && !req.body.password)) {
         return res.status(400).json({
             error: 'Wrong request format',
             format: {
