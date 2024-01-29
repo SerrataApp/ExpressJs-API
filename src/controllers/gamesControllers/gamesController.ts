@@ -43,6 +43,10 @@ export const createGameController = async (req: Request, res: Response) => {
         });
     } catch (error) {
         if (error instanceof PrismaClientKnownRequestError) {
+            if (error.code === 'P2003') {
+                return res.status(400).json({ error: 'Game mode does not exist' });
+            }
+
             addGitHubIssue(error)
             
             res.status(500).json({
