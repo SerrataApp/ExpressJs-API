@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { createUser, getUserPublicData, getUserCreate, UserPublicData, UserCreate, getUserAllData } from '../../models/userModel';
+import { createUser, getUserPublicDataByUsername, getUserCreate, UserPublicData, UserCreate, getUserAllData, getUserPublicDataById } from '../../models/userModel';
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { userNotFound } from "../../error/userNotFound";
 import { addGitHubIssue } from "../../utils/githubIssues";
@@ -56,14 +56,44 @@ export const createUserController = async (req: Request, res: Response) => {
     }
 }
 
-export const getUserController = async (req: Request, res: Response) => {
+export const getUserUsernameController = async (req: Request, res: Response) => {
     try {
         const username = req.query.username as string;
 
         if (!username) {
             return res.status(400).json({ error: 'Please specify a username' });
         }
-        const user: UserPublicData | null = await getUserPublicData(username);
+        const user: UserPublicData | null = await getUserPublicDataByUsername(username);
+
+        if (!user) {
+            return userNotFound(res)
+        }
+
+        res.status(200).json({
+            user,
+            message: "Recovered user"
+        });
+    } catch (error) {
+        if (error instanceof PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}
+
+export const getUserIdController = async (req: Request, res: Response) => {
+    try {
+        const userId: number = parseInt(req.query.id as string, 10);
+
+        if (!userId) {
+            return res.status(400).json({ error: 'Please specify a username' });
+        }
+        const user: UserPublicData | null = await getUserPublicDataById(userId);
 
         if (!user) {
             return userNotFound(res)

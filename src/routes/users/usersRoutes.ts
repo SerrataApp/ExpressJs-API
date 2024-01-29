@@ -1,12 +1,13 @@
 import express from 'express';
-import { createUserController, getUserController, loginUserController } from '../../controllers/usersControllers/usersController';
+import { createUserController, getUserUsernameController, getUserIdController, loginUserController } from '../../controllers/usersControllers/usersController';
 import usersMeRoutes from './me/usersMeRoutes';
 import { ensureAuthenticated } from '../../middleware/loginMiddleware';
 
 
 const router = express.Router();
 //Récuération d'un user
-router.get('/', getUserController);
+router.get('/username', getUserUsernameController);
+router.get('/id', getUserIdController);
 //Création d'un user
 router.post('/', createUserController);
 //Récupération du Bearer token

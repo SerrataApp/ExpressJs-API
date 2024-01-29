@@ -44,10 +44,28 @@ const validateEmail = (email: string) => {
         );
 };
 
-export async function getUserPublicData(username: string): Promise<UserPublicData | null> {
+export async function getUserPublicDataByUsername(username: string): Promise<UserPublicData | null> {
     try {
         const user: UserPublicData | null = await prisma.user.findUnique({
             where: { username: username }
+        });
+        if (user) {
+            const { id, username, playedGames } = user;
+            const userPublicData: UserPublicData = { id, username, playedGames };
+            return userPublicData;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in the getUser: ", error);
+        throw error;
+    }
+}
+
+export async function getUserPublicDataById(id: number): Promise<UserPublicData | null> {
+    try {
+        const user: UserPublicData | null = await prisma.user.findUnique({
+            where: { id: id }
         });
         if (user) {
             const { id, username, playedGames } = user;
