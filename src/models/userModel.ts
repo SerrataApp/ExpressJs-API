@@ -47,12 +47,16 @@ const validateEmail = (email: string) => {
 export async function getUserPublicDataByUsername(username: string): Promise<UserPublicData | null> {
     try {
         const user: UserPublicData | null = await prisma.user.findUnique({
-            where: { username: username }
+            where: { username: username },
+            select: {
+                id: true,
+                username: true,
+                playedGames: true,
+                signupDate: true,
+            }
         });
         if (user) {
-            const { id, username, playedGames } = user;
-            const userPublicData: UserPublicData = { id, username, playedGames };
-            return userPublicData;
+            return user;
         } else {
             return null;
         }
@@ -65,12 +69,16 @@ export async function getUserPublicDataByUsername(username: string): Promise<Use
 export async function getUserPublicDataById(id: number): Promise<UserPublicData | null> {
     try {
         const user: UserPublicData | null = await prisma.user.findUnique({
-            where: { id: id }
+            where: { id: id },
+            select: {
+                id: true,
+                username: true,
+                playedGames: true,
+                signupDate: true,
+            }
         });
         if (user) {
-            const { id, username, playedGames } = user;
-            const userPublicData: UserPublicData = { id, username, playedGames };
-            return userPublicData;
+            return user;
         } else {
             return null;
         }
