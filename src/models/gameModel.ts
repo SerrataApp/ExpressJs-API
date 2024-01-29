@@ -61,7 +61,10 @@ export async function getGamesByGameMode(gameMode: number) {
         const games = await prisma.gameMode.findMany({
             where: { id: gameMode },
             select: { Game: true }
-        })
+        });
+        if (games.length === 0) {
+            return [];
+        }        
         return games[0].Game;
     } catch (error) {
         throw error;

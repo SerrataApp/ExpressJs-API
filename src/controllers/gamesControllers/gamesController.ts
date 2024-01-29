@@ -3,6 +3,7 @@
 import { Request, Response } from "express";
 import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames, getGames, getGamesByGameMode, updateGameState } from "../../models/gameModel";
 import { getPlayerIdByUsername } from "../../models/userModel";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const getGameController = async (req: Request, res: Response) => {
     try {
@@ -131,6 +132,7 @@ export const getGamesByGameModeController = async (req: Request, res: Response) 
                 error: "Prisma error, please notify api creator",
             })
         } else {
+            console.log(error)
             res.status(500).json({ error: 'Internal server error' });
         }
     }
