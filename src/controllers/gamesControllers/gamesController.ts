@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { getGame, createGame, GameInDb, Game, deleteGameMe, getAllUserGames, getGames, getGamesByGameMode, updateGameState } from "../../models/gameModel";
 import { getPlayerIdByUsername } from "../../models/userModel";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const getGameController = async (req: Request, res: Response) => {
     try {

@@ -3,6 +3,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { Request, Response } from "express";
 import { UserPrivateData, UserUpdate, deleteUser, getUserPrivateData, updatePlayedGame, updatePlayerData } from "../../models/userModel";
 import { userNotFound } from "../../error/userNotFound";
+import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const getUserMeController = async (req: Request, res: Response) => {
     try {

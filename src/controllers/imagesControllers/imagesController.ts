@@ -3,6 +3,7 @@
 import { Request, Response } from "express";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { Image, createImage, deleteImage, getImage, updateImage } from "../../models/imageModels";
+import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const getImageController = async (req: Request, res: Response) => {
     try {

@@ -2,6 +2,7 @@
 
 import { Request, Response } from "express";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { addGitHubIssue } from "../../utils/githubIssues";
 import { getGameMode, GameMode, createGameMode, updateGameMode, deleteGameMode, getAllImages } from "../../models/gameModeModel";
 
 export const getGameModeController = async (req: Request, res: Response) => {
