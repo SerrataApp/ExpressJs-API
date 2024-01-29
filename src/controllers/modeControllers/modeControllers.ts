@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { Mode, createUpdateMode, deleteMode } from "../../models/modeModels";
-import { Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { addGitHubIssue } from "../../utils/githubIssues";
 

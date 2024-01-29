@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { deleteUser, disableUser } from "../../models/userModel";
 import { deleteGame } from "../../models/gameModel";
-import { Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { addGitHubIssue } from "../../utils/githubIssues";
 
