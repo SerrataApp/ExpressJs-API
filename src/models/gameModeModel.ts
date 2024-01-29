@@ -47,16 +47,16 @@ export async function getAllImages(id: number) {
     }
 }
 
-export async function createGameMode(gameMode: GameMode): Promise<Boolean> {
+export async function createGameMode(gameMode: GameMode): Promise<number> {
     try {
-        await prisma.gameMode.create({
+        const gamemode = await prisma.gameMode.create({
             data: {
                 name: gameMode.name,
                 description: gameMode.description,
                 authorId: gameMode.authorId
             }
         })
-        return true;
+        return gamemode.id;
     } catch (error) {
         throw error;
     }

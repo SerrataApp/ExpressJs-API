@@ -59,8 +59,13 @@ export const createGameModeController = async (req: Request, res: Response) => {
         newGameMode.authorId = req.user.id as number;
         const { id, name, description, authorId } = newGameMode
         newGameMode = { id, name, description, authorId }
-        await createGameMode(newGameMode)
-        res.status(201).json({ message: "Game mode created" })
+        const gamemode = await createGameMode(newGameMode)
+        console.log(gamemode);
+        
+        res.status(201).json({ 
+            id: gamemode,
+            message: "Game mode created" 
+        })
     } catch (error) {
         if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
