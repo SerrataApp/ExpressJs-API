@@ -1,39 +1,51 @@
 import { PrismaClient } from "@prisma/client";
-import { UserCreate, UserPrivateData, createUser, deleteUser } from "../models/userModel"; // Update the path accordingly
+import { UserCreate, UserPrivateData, UserPublicData, createUser, deleteUser, getUserPublicData } from "../models/userModel"; // Update the path accordingly
 
 const prisma = new PrismaClient();
 
+const mockUserCreate = {
+  username: 'test123',
+  email: 'test123@example.com',
+  password: 'password123',
+};
+
 describe('Test /users', () => {
-  describe('Create user', () => {
-    it('User should be OK', async () => {
-      // Create a mock UserCreate object for testing
-      // const mockUserCreate = {
-      //   username: 'test123',
-      //   email: 'test123@example.com',
-      //   password: 'password123',
-      //   // Add other properties as needed for your UserCreate type
-      // };
+  // it('User should be OK', async () => {
 
-      // // Call the createUser function with the mockUserCreate object
-      // let result: UserPrivateData | Boolean | null = await createUser(mockUserCreate as UserCreate);
+  //   let result: UserPrivateData | Boolean | null = await createUser(mockUserCreate as UserCreate);
 
-      // const test = {
-      //   //@ts-ignore
-      //   id: result.id,
-      //   //@ts-ignore
-      //   signupDate: result.signupDate,
-      //   admin: false,
-      //   cgu: false,
-      //   disabled: false,
-      //   email: "test123@example.com",
-      //   playedGames: 0,
-      //   username: "test123"
-      // };
+  //   const test = {
+  //     //@ts-ignore
+  //     id: result.id,
+  //     //@ts-ignore
+  //     signupDate: result.signupDate,
+  //     admin: false,
+  //     cgu: false,
+  //     disabled: false,
+  //     email: "test123@example.com",
+  //     playedGames: 0,
+  //     username: "test123"
+  //   };
 
-      // await deleteUser("test123");
+  //   await deleteUser("test123");
 
-      expect(true).toEqual(true);
+  //   expect(result).toEqual(test);
 
-    });
-  });
+  // });
+  // // get user public data by username
+  // it('User should be OK', async () => {
+  //   let result: UserPublicData | null = await getUserPublicData(mockUserCreate.username);
+
+  //   console.log(result);
+    
+  //   const test = {
+
+  //     playedGames: 0,
+  //     username: mockUserCreate.username
+  //   };
+
+  //   await deleteUser("test123");
+
+  //   expect(result).toEqual(test);
+  // });
 });
