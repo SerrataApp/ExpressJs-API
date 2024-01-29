@@ -14,7 +14,9 @@ export interface GameMode {
 export async function getGameMode(id: number): Promise<GameMode | null> {
     try {
         const gameMode: GameMode | null = await prisma.gameMode.findUnique({
-            where: { id: id }
+            where: { 
+                id: id,
+            }
         })
         return gameMode;
     } catch (error) {

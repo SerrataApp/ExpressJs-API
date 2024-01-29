@@ -35,6 +35,9 @@ export const getGameController = async (req: Request, res: Response) => {
 export const createGameController = async (req: Request, res: Response) => {
     try {
         const newGame: Game = req.body;
+        if (newGame.time > 1000000000) {
+            return res.status(400).json({ error: 'Time is too big, U noob' });
+        }
         newGame.playerId = await getPlayerIdByUsername(req.user.username) as number;
 
         await createGame(newGame);
@@ -53,6 +56,7 @@ export const createGameController = async (req: Request, res: Response) => {
                 error: "Prisma error, please notify api creator",
             })
         } else {
+            console.log(error)
             res.status(500).json({ error: 'Internal server error' });
         }
     }
