@@ -11,12 +11,12 @@ export interface Game {
     time: number;
     errors: number;
     hint: number;
-    public: Boolean;
 }
 
 export interface GameInDb extends Game {
     id: number;
     gameDate: Date;
+    public: Boolean;
 }
 
 //-------------Fonctions de traitement-------------
@@ -59,9 +59,20 @@ export async function getGames(offSet: number, limit: number): Promise<[Game] | 
 export async function getGamesByGameMode(gameMode: number) {
     try {
         const games = await prisma.gameMode.findMany({
-            where: { id: gameMode },
-            select: { Game: true }
-        })
+            where: {
+                id: gameMode,
+            },
+            include: {
+                Game: {
+                    where: {
+                        public: true
+                    }
+                }
+            }
+        });
+        if (games.length === 0) {
+            return [];
+        }
         return games[0].Game;
     } catch (error) {
         throw error;
@@ -70,10 +81,22 @@ export async function getGamesByGameMode(gameMode: number) {
 
 export async function createGame(newGame: Game): Promise<Game | null> {
     try {
-        const game: Game | null = await prisma.game.create({
+        const game: GameInDb = await prisma.game.create({
             data: newGame
         });
-        return game;
+        const bestGame = await prisma.game.findFirst({
+            where: {
+                gameMode: newGame.gameMode,
+                playerId: newGame.playerId,
+                time: {
+                    lt: newGame.time
+                }
+            }
+        })
+        const id = game.id;
+        const best = bestGame ? false : true;
+
+        return { id, best }
     } catch (error) {
         throw error;
     }
@@ -108,13 +131,23 @@ export async function deleteGame(id: number): Promise<Boolean> {
 
 export async function updateGameState(id: number): Promise<Boolean> {
     try {
-        await prisma.game.updateMany({
-            data: { public: false }
+        const gameState: boolean = await prisma.game.findUnique({
+            where: { id: id },
+            select: { public: true }
         });
+        const gameModeId = await prisma.game.findUnique({
+            where: { id: id },
+            select: { gameMode: true }
+        });
+        if (!gameModeId) return false;
+        await prisma.game.updateMany({
+            data: { public: false },
+            where: { gameMode: gameModeId?.gameMode }
+        });        
         await prisma.game.update({
             where: { id: id },
-            data: { public: true }
-        })
+            data: { public: !gameState.public }
+        });
         return true
     } catch (error) {
         throw error;

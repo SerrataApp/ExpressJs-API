@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { UserCreate, UserPrivateData, UserPublicData, createUser, deleteUser, getUserPublicData } from "../models/userModel"; // Update the path accordingly
+import { UserCreate, UserPrivateData, UserPublicData, createUser, deleteUser, getUserPublicDataByUsername } from "../models/userModel"; // Update the path accordingly
 
 const prisma = new PrismaClient();
 

@@ -14,7 +14,7 @@ export const isImageOwner = async (req: Request, res: Response, next: NextFuncti
             return res.status(401).json({ message: "You do not have the right to modify an image that is not yours." });
         }
     } catch {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({

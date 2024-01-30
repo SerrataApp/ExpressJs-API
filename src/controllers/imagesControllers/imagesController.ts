@@ -1,7 +1,9 @@
 //@ts-nocheck
 
 import { Request, Response } from "express";
+import { Prisma } from "@prisma/client";
 import { Image, createImage, deleteImage, getImage, updateImage } from "../../models/imageModels";
+import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const getImageController = async (req: Request, res: Response) => {
     try {
@@ -15,7 +17,7 @@ export const getImageController = async (req: Request, res: Response) => {
             })
         }
     } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -36,7 +38,7 @@ export const createImageController = async (req: Request, res: Response) => {
         await createImage(newImage)
         res.status(201).json({ message: "Image created" })
     } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(400).json({
                     error: "There is a unique constraint violation, a new image cannot be created",
@@ -63,7 +65,7 @@ export const updateImageController = async (req: Request, res: Response) => {
         await updateImage(imageId, imageToUpdate)
         res.status(200).json({ message: "Image updated" })
     } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(400).json({
                     error: "There is a unique constraint violation, image cannot be updated",
@@ -86,7 +88,7 @@ export const deleteImageController = async (req: Request, res: Response) => {
         await deleteImage(parseInt(req.query.id as string, 10));
         res.status(200).json({ message: "Image deleted" })
     } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({

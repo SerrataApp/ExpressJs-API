@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { deleteUser, disableUser } from "../../models/userModel";
 import { deleteGame } from "../../models/gameModel";
 import { Prisma } from "@prisma/client";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const disableUserController = async (req: Request, res: Response) => {
@@ -13,7 +12,7 @@ export const disableUserController = async (req: Request, res: Response) => {
             message: "User disable"
         })
     } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -32,7 +31,7 @@ export const deleteAnyGameController = async (req: Request, res: Response) => {
             message: "Game deleted"
         })
     } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -51,7 +50,7 @@ export const deleteAnyUserController = async (req: Request, res: Response) => {
             message: "User deleted"
         })
     } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
