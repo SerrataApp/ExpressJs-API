@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { UserCreate } from '../models/userModel';
-import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { addGitHubIssue } from '../utils/githubIssues';
 
 dotenv.config();
@@ -15,7 +15,7 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
         req.user = decodedToken.user;
         return next();
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
