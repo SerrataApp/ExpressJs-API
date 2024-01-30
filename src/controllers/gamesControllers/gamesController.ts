@@ -149,7 +149,10 @@ export const getGamesByGameModeController = async (req: Request, res: Response) 
 
 export const updateGameStateController = async (req: Request, res: Response) => {
     try {
-        await updateGameState(parseInt(req.query.id as string, 10))
+        const update = await updateGameState(parseInt(req.query.id as string, 10));
+        if (!update) {
+            return res.status(404).json({ error: 'Game not found' });
+        }
         res.status(201).json({
             message: 'Game updated'
         })

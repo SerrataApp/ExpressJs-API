@@ -119,13 +119,19 @@ export async function deleteGame(id: number): Promise<Boolean> {
 
 export async function updateGameState(id: number): Promise<Boolean> {
     try {
+        const gameModeId = await prisma.game.findUnique({
+            where: { id: id },
+            select: { gameMode: true }
+        });
+        if (!gameModeId) return false;
         await prisma.game.updateMany({
-            data: { public: false }
+            data: { public: false },
+            where: { gameMode: gameModeId}
         });
         await prisma.game.update({
             where: { id: id },
             data: { public: true }
-        })
+        });
         return true
     } catch (error) {
         throw error;
