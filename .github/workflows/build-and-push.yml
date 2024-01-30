@@ -40,6 +40,8 @@ jobs:
                     context: .
                     push: true
                     tags: tang0ch4rlie/expressserrata:${{ steps.commit.outputs.short }}
+                    cache-from: type=gha
+                    cache-to: type=gha,mode=max
     deploy:
         name: Deploy to Kubernetes Cluster
         needs: build_and_push
