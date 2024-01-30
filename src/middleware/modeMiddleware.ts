@@ -13,7 +13,7 @@ export const isModeOwner = async (req: Request, res: Response, next: NextFunctio
             return res.status(401).json({ error: "You do not have the right to modify the content of a game mode that is not yours." });
         }
     } catch {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({

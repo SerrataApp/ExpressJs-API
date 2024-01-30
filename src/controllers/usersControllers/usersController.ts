@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { createUser, getUserPublicDataByUsername, getUserCreate, UserPublicData, UserCreate, getUserPublicDataById } from '../../models/userModel';
 import { userNotFound } from "../../error/userNotFound";
 import { addGitHubIssue } from "../../utils/githubIssues";
-import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 dotenv.config();
 
@@ -38,7 +38,7 @@ export const createUserController = async (req: Request, res: Response) => {
             });
         }
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(409).json({
                     error: "There field already exists",
@@ -74,7 +74,7 @@ export const getUserUsernameController = async (req: Request, res: Response) => 
             message: "Recovered user"
         });
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -104,7 +104,7 @@ export const getUserIdController = async (req: Request, res: Response) => {
             message: "Recovered user"
         });
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -154,7 +154,7 @@ export const loginUserController = async (req: Request, res: Response) => {
             });
         }
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({

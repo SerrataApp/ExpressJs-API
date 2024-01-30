@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { Request, Response } from "express";
 import { UserPrivateData, UserUpdate, deleteUser, getUserPrivateData, updatePlayedGame, updatePlayerData } from "../../models/userModel";
 import { userNotFound } from "../../error/userNotFound";
@@ -18,7 +18,7 @@ export const getUserMeController = async (req: Request, res: Response) => {
             message: "Recovered user"
         });
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -42,7 +42,7 @@ export const deleteUserMeController = async (req: Request, res: Response) => {
             message: "Deleted user"
         });
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -62,7 +62,7 @@ export const updatePlayedGameController = async (req: Request, res: Response) =>
             message: "Game updated"
         });
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -98,7 +98,7 @@ export const updatePlayerDataController = async (req: Request, res: Response) =>
             message: "User updated"
         });
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(400).json({
                     error: "There is a unique constraint violation, user cannot be updated",

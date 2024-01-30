@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 import { Request, Response } from "express";
-import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { addGitHubIssue } from "../../utils/githubIssues";
 import { getGameMode, GameMode, createGameMode, updateGameMode, deleteGameMode, getAllImages } from "../../models/gameModeModel";
 
@@ -17,7 +17,7 @@ export const getGameModeController = async (req: Request, res: Response) => {
             })
         }
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -41,7 +41,7 @@ export const getAllImagesController = async (req: Request, res: Response) => {
             })
         }
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
@@ -67,7 +67,7 @@ export const createGameModeController = async (req: Request, res: Response) => {
             message: "Game mode created" 
         })
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(400).json({
                     error: "There is a unique constraint violation, game mode cannot be created",
@@ -94,7 +94,7 @@ export const updateGameModeController = async (req: Request, res: Response) => {
         await updateGameMode(GameModeId, GameModeToUpdate)
         res.status(200).json({ message: "Game mode updated" })
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(400).json({
                     error: "There is a unique constraint violation, game mode cannot be updated",
@@ -117,7 +117,7 @@ export const deleteGameModeController = async (req: Request, res: Response) => {
         await deleteGameMode(parseInt(req.query.id as string, 10));
         res.status(200).json({ message: "Game mode deleted" })
     } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
