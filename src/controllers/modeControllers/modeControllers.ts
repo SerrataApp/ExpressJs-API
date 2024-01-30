@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Mode, createUpdateMode, deleteMode } from "../../models/modeModels";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client";
 import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const createUpdateModeController = async (req: Request, res: Response) => {
@@ -16,7 +16,7 @@ export const createUpdateModeController = async (req: Request, res: Response) =>
             message: "Mode created/modified"
         })
     } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 return res.status(400).json({
                     error: "There is a unique constraint violation, a new mode can not be created",
@@ -51,7 +51,7 @@ export const deleteModeController = async (req: Request, res: Response) => {
             message: "Mode deleted"
         })
     } catch (error) {
-        if (error instanceof PrismaClientKnownRequestError) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({

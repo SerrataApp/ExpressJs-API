@@ -81,7 +81,7 @@ export async function getGamesByGameMode(gameMode: number) {
 
 export async function createGame(newGame: Game): Promise<Game | null> {
     try {
-        await prisma.game.create({
+        const game: GameInDb = await prisma.game.create({
             data: newGame
         });
         const bestGame = await prisma.game.findFirst({
@@ -93,11 +93,10 @@ export async function createGame(newGame: Game): Promise<Game | null> {
                 }
             }
         })
-        if (bestGame) {
-            return false;
-        } else {
-            return true;
-        }
+        const id = game.id;
+        const best = bestGame ? false : true;
+        
+        return { id, best}
     } catch (error) {
         throw error;
     }
