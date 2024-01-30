@@ -4,8 +4,8 @@ ENV PORT=3000
 COPY package*.json .
 RUN npm install
 COPY . .
-RUN npm run build
 RUN npx prisma generate
+RUN npm run build
 # RUN rm -rf node_modules
 # RUN rm -rf src
 EXPOSE 3000
