@@ -59,7 +59,7 @@ export async function getGames(offSet: number, limit: number): Promise<[Game] | 
 export async function getGamesByGameMode(gameMode: number) {
     try {
         const games = await prisma.gameMode.findMany({
-            where: { 
+            where: {
                 id: gameMode,
             },
             include: {
@@ -72,7 +72,7 @@ export async function getGamesByGameMode(gameMode: number) {
         });
         if (games.length === 0) {
             return [];
-        }        
+        }
         return games[0].Game;
     } catch (error) {
         throw error;
@@ -95,8 +95,8 @@ export async function createGame(newGame: Game): Promise<Game | null> {
         })
         const id = game.id;
         const best = bestGame ? false : true;
-        
-        return { id, best}
+
+        return { id, best }
     } catch (error) {
         throw error;
     }
@@ -131,6 +131,10 @@ export async function deleteGame(id: number): Promise<Boolean> {
 
 export async function updateGameState(id: number): Promise<Boolean> {
     try {
+        const gameState: boolean = await prisma.game.findUnique({
+            where: { id: id },
+            select: { public: true }
+        });
         const gameModeId = await prisma.game.findUnique({
             where: { id: id },
             select: { gameMode: true }
@@ -138,11 +142,13 @@ export async function updateGameState(id: number): Promise<Boolean> {
         if (!gameModeId) return false;
         await prisma.game.updateMany({
             data: { public: false },
-            where: { gameMode: gameModeId?.gameMode}
+            where: { gameMode: gameModeId?.gameMode }
         });
+        console.log(gameState);
+        
         await prisma.game.update({
             where: { id: id },
-            data: { public: true }
+            data: { public: !gameState.public }
         });
         return true
     } catch (error) {
