@@ -139,7 +139,7 @@ export async function updateGameState(id: number): Promise<Boolean> {
         if (!gameModeId) return false;
         await prisma.game.updateMany({
             data: { public: false },
-            where: { gameMode: gameModeId}
+            where: { gameMode: gameModeId?.gameMode}
         });
         await prisma.game.update({
             where: { id: id },

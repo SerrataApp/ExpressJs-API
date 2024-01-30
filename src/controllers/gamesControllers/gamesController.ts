@@ -166,6 +166,8 @@ export const updateGameStateController = async (req: Request, res: Response) => 
                 error: "Prisma error, please notify api creator",
             })
         } else {
+            console.log(error);
+            
             res.status(500).json({ error: 'Internal server error' });
         }
     }
