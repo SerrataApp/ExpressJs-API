@@ -40,8 +40,10 @@ export const createGameController = async (req: Request, res: Response) => {
         }
         newGame.playerId = await getPlayerIdByUsername(req.user.username) as number;
 
-        await createGame(newGame);
+        const isBest = await createGame(newGame);
+
         res.status(201).json({
+            best: isBest,
             message: "Created game"
         });
     } catch (error) {
