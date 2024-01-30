@@ -1,6 +1,8 @@
 //@ts-nocheck
 
 import { Request, Response } from "express";
+import { Prisma } from "@prisma/client";
+import { addGitHubIssue } from "../../utils/githubIssues";
 import { getGameMode, GameMode, createGameMode, updateGameMode, deleteGameMode, getAllImages } from "../../models/gameModeModel";
 
 export const getGameModeController = async (req: Request, res: Response) => {
@@ -15,8 +17,15 @@ export const getGameModeController = async (req: Request, res: Response) => {
             })
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during GameMode retrieval : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -32,8 +41,15 @@ export const getAllImagesController = async (req: Request, res: Response) => {
             })
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during images retrieval : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -43,11 +59,29 @@ export const createGameModeController = async (req: Request, res: Response) => {
         newGameMode.authorId = req.user.id as number;
         const { id, name, description, authorId } = newGameMode
         newGameMode = { id, name, description, authorId }
-        await createGameMode(newGameMode)
-        res.status(201).json({ message: "Game mode created" })
+        const gamemode = await createGameMode(newGameMode)
+        console.log(gamemode);
+        
+        res.status(201).json({ 
+            id: gamemode,
+            message: "Game mode created" 
+        })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during GameMode creation : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                return res.status(400).json({
+                    error: "There is a unique constraint violation, game mode cannot be created",
+                    field: error.meta?.target
+                })
+            }
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -60,8 +94,21 @@ export const updateGameModeController = async (req: Request, res: Response) => {
         await updateGameMode(GameModeId, GameModeToUpdate)
         res.status(200).json({ message: "Game mode updated" })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during GameMode update : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                return res.status(400).json({
+                    error: "There is a unique constraint violation, game mode cannot be updated",
+                    field: error.meta?.target
+                })
+            }
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -70,7 +117,14 @@ export const deleteGameModeController = async (req: Request, res: Response) => {
         await deleteGameMode(parseInt(req.query.id as string, 10));
         res.status(200).json({ message: "Game mode deleted" })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error during GameMode delete : ${error}` });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }

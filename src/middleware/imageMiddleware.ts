@@ -11,9 +11,17 @@ export const isImageOwner = async (req: Request, res: Response, next: NextFuncti
         if (image?.authorId === req.user.id) {
             return next();
         } else {
-            return res.status(401).json({ message: "Vous n'avez pas le droit modifier une image qui n'est pas la votre." });
+            return res.status(401).json({ message: "You do not have the right to modify an image that is not yours." });
         }
     } catch {
-        return res.status(500).json({ message: "Une erreur s'est produite lors de la vérification des données" });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            return res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }

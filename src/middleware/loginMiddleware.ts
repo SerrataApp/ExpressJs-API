@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { UserCreate } from '../models/userModel';
+import { Prisma } from "@prisma/client";
+import { addGitHubIssue } from '../utils/githubIssues';
 
 dotenv.config();
 
@@ -12,8 +14,15 @@ export const ensureAuthenticated = (req: Request, res: Response, next: NextFunct
         //@ts-ignore
         req.user = decodedToken.user;
         return next();
-    } catch (error: Error | any) {
-        console.error("Erreur de vérification du jeton :", error.message);
-        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
     }
 }

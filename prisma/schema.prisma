@@ -34,7 +34,7 @@ model Game {
   errors   Int
   hint     Int
   gameDate DateTime @default(now())
-  public   Boolean
+  public   Boolean @default(false)
 
   player User     @relation(fields: [playerId], references: [id])
   mode   GameMode @relation(fields: [gameMode], references: [id])

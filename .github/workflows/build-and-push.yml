@@ -1,27 +1,20 @@
 name: node_express_app
 
-on: # specify the build to trigger the automated ci/cd
+on:
     push:
         branches:
-            - "main"
+            - main
+    pull_request:
+        branches:    
+            - main
+    # workflow_run:
+    #     workflows: ["test-api"]
+    #     types:
+    #         - completed
 jobs:
-    test:
-        name: Units test
-        runs-on: ubuntu-latest
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v3 
-
-            -   name: Use Node.js
-                uses: actions/setup-node@v1
-                with:
-                    node-version: 18.x
-            -       run: npm install
-            -       run: npm test
     build_and_push:
         name: Build Docker image
-        needs: test
-        runs-on: ubuntu-latest # specify the build machine
+        runs-on: ubuntu-latest 
         steps:
             -   name: Checkout
                 uses: actions/checkout@v3  
@@ -49,7 +42,7 @@ jobs:
                     tags: tang0ch4rlie/expressserrata:${{ steps.commit.outputs.short }}
     deploy:
         name: Deploy to Kubernetes Cluster
-        needs: [build_and_push, test]
+        needs: build_and_push
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout Repo

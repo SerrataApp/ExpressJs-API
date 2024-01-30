@@ -44,64 +44,106 @@ const validateEmail = (email: string) => {
         );
 };
 
-export async function getUserPublicData(username: string): Promise<UserPublicData | null> {
-    const user: UserPublicData | null = await prisma.user.findUnique({
-        where: { username: username }
-    });
-    if (user) {
-        const { id, username, playedGames } = user;
-        const userPublicData: UserPublicData = { id, username, playedGames };
-        console.log(userPublicData);
-        return userPublicData;
-    } else {
-        return null;
+export async function getUserPublicDataByUsername(username: string): Promise<UserPublicData | null> {
+    try {
+        const user: UserPublicData | null = await prisma.user.findUnique({
+            where: { username: username },
+            select: {
+                id: true,
+                username: true,
+                playedGames: true,
+                signupDate: true,
+            }
+        });
+        if (user) {
+            return user;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in the getUser: ", error);
+        throw error;
+    }
+}
+
+export async function getUserPublicDataById(id: number): Promise<UserPublicData | null> {
+    try {
+        const user: UserPublicData | null = await prisma.user.findUnique({
+            where: { id: id },
+            select: {
+                id: true,
+                username: true,
+                playedGames: true,
+                signupDate: true,
+            }
+        });
+        if (user) {
+            return user;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in the getUser: ", error);
+        throw error;
     }
 }
 
 export async function getUserPrivateData(username: string): Promise<UserPrivateData | null> {
-    const user: UserPrivateData | null = await prisma.user.findUnique({
-        where: { username: username }
-    });
-    if (user) {
-        const { id, username, playedGames, email, signupDate, disabled, cgu, admin } = user;
-        const UserPrivateData: UserPrivateData = { id, username, playedGames, email, signupDate, disabled, cgu, admin };
-        return UserPrivateData;
-    } else {
-        return null;
+    try {
+        const user: UserPrivateData | null = await prisma.user.findUnique({
+            where: { username: username }
+        });
+        if (user) {
+            const { id, username, playedGames, email, signupDate, disabled, cgu, admin } = user;
+            const UserPrivateData: UserPrivateData = { id, username, playedGames, email, signupDate, disabled, cgu, admin };
+            return UserPrivateData;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in the getUser: ", error);
+        throw error;
     }
 }
 
 export async function getUserCreate(username: string): Promise<UserCreate | null> {
-    const user: UserCreate | null = await prisma.user.findUnique({
-        where: { username: username }
-    });
-    if (user) {
-        const { id, username, email, password } = user;
-        const UserCreate: UserCreate = { id, username, email, password };
-        return UserCreate;
-    } else {
-        return null;
+    try {
+        const user: UserCreate | null = await prisma.user.findUnique({
+            where: { username: username }
+        });
+        if (user) {
+            const { id, username, email, password } = user;
+            const UserCreate: UserCreate = { id, username, email, password };
+            return UserCreate;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in the getUser: ", error);
+        throw error;
     }
 }
 
-export async function createUser(newUser: UserCreate): Promise<UserPrivateData | null | Boolean> {
+export async function createUser(newUser: UserCreate): Promise<UserPrivateData | Boolean> {
     if (validateEmail(newUser.email) == null)
         return false
     newUser.password = setPassword(newUser.password)
-    const createUser = await prisma.user.create({
-        data: newUser,
-    });
-    if (createUser) {
+    try {
+        const createUser = await prisma.user.create({
+            data: newUser,
+        });
         const { id, username, email, playedGames, signupDate, disabled, cgu, admin } = createUser;
         const userPrivateData: UserPrivateData = { id, username, email, playedGames, signupDate, disabled, cgu, admin }
-        return userPrivateData;
-    } else {
-        return null;
+        return userPrivateData;     
+    } catch (error) {
+        console.error("Error in the createUser: ", error);
+        throw error;
     }
 }
 
 export async function deleteUser(username: string): Promise<Boolean> {
-    const userId = await getPlayerIdByUsername(username);
+    try {
+        const userId = await getPlayerIdByUsername(username);
     if (userId) {
         await prisma.game.deleteMany({
             where: { playerId: userId }
@@ -111,22 +153,30 @@ export async function deleteUser(username: string): Promise<Boolean> {
         })
     }
     return true;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function updatePlayedGame(username: string): Promise<UserPublicData | null> {
-    const user: UserPrivateData | null = await prisma.user.update({
-        where: { username: username },
-        data: {
-            playedGames: {
-                increment: 1
+    try {
+        const user: UserPrivateData | null = await prisma.user.update({
+            where: { username: username },
+            data: {
+                playedGames: {
+                    increment: 1
+                }
             }
-        }
-    })
-    return user;
+        })
+        return user;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function updatePlayerData(id: number, data: UserUpdate): Promise<UserUpdate | null | Boolean> {
-    if (validateEmail(data.email) == null)
+    try {
+        if (validateEmail(data.email) == null)
         return false
     const user: UserUpdate | null = await prisma.user.update({
         where: { id: id },
@@ -136,55 +186,75 @@ export async function updatePlayerData(id: number, data: UserUpdate): Promise<Us
         }
     })
     return user;
+    } catch (error) {
+        console.error("Error in the updatePlayerData: ", error);
+        throw error;
+    }
 }
 
 export async function getPlayerIdByUsername(username: string): Promise<number | null> {
-    const user_id = await prisma.user.findUnique({
-        where: {
-            username: username
-        },
-        select: {
-            id: true
-        }
-    });
-    if (user_id)
-        return user_id.id;
-    else
-        return null
+    try {
+        const user_id = await prisma.user.findUnique({
+            where: {
+                username: username
+            },
+            select: {
+                id: true
+            }
+        });
+        if (user_id)
+            return user_id.id;
+        else
+            return null
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function getUserAllData(id: number) {
-    const user = await prisma.user.findUnique({
-        where: { id: id },
-        include: {
-            Games: true,
-            GameMode: true
-        },
-    })
-    return user
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: id },
+            include: {
+                Games: true,
+                GameMode: true
+            },
+        })
+        return user
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function disableUser(id: number): Promise<Boolean> {
-    const user = await prisma.user.findUnique({
-        where: { id: id },
-        select: { disabled: true }
-    });
-    //@ts-ignore
-    const newDisabledState = !user.disabled;
-
-    await prisma.user.update({
-        where: { id: id },
-        data: { disabled: newDisabledState }
-    });
-
-    return newDisabledState;
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: id },
+            select: { disabled: true }
+        });
+        //@ts-ignore
+        const newDisabledState = !user.disabled;
+    
+        await prisma.user.update({
+            where: { id: id },
+            data: { disabled: newDisabledState }
+        });
+    
+        return newDisabledState;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function getAdminField(id: number): Promise<Boolean> {
-    const userAdmin = await prisma.user.findUnique({
-        where: { id: id },
-        select: { admin: true }
-    });
-    //@ts-ignore
-    return userAdmin.admin;
+    try {
+        const userAdmin = await prisma.user.findUnique({
+            where: { id: id },
+            select: { admin: true }
+        });
+        //@ts-ignore
+        return userAdmin.admin;
+    } catch (error) {
+        throw error;
+    }
 }

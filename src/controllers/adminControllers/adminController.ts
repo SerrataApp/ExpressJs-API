@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { deleteUser, disableUser } from "../../models/userModel";
-import { deleteGame, deleteGameMe } from "../../models/gameModel";
+import { deleteGame } from "../../models/gameModel";
+import { Prisma } from "@prisma/client";
+import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const disableUserController = async (req: Request, res: Response) => {
     try {
@@ -10,8 +12,15 @@ export const disableUserController = async (req: Request, res: Response) => {
             message: "User disable"
         })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'User deactivation error' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -22,8 +31,15 @@ export const deleteAnyGameController = async (req: Request, res: Response) => {
             message: "Game deleted"
         })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error deleting game' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -34,7 +50,14 @@ export const deleteAnyUserController = async (req: Request, res: Response) => {
             message: "User deleted"
         })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error deleting user' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }

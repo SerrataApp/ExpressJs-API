@@ -1,40 +1,56 @@
 //@ts-nocheck
-
+import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
-import { UserPrivateData, UserPublicData, UserUpdate, deleteUser, getUserPrivateData, updatePlayedGame, updatePlayerData } from "../../models/userModel";
+import { UserPrivateData, UserUpdate, deleteUser, getUserPrivateData, updatePlayedGame, updatePlayerData } from "../../models/userModel";
+import { userNotFound } from "../../error/userNotFound";
+import { addGitHubIssue } from "../../utils/githubIssues";
 
 export const getUserMeController = async (req: Request, res: Response) => {
     try {
         const user: UserPrivateData | null = await getUserPrivateData(req.user.username);
 
         if (!user) {
-            return res.status(404).json({ error: 'Utilisateur introuvable' });
+            return userNotFound(res);
         }
 
         res.status(200).json({
             user,
-            message: "Utilsateur récupéré"
+            message: "Recovered user"
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erreur lors de la récupération de l\'utiliasteur' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
 export const deleteUserMeController = async (req: Request, res: Response) => {
     try {
-        const user: UserPrivateData | null = await deleteUser(req.user.username);
+        const user: Boolean = await deleteUser(req.user.username);
 
         if (!user) {
-            return res.status(404).json({ error: 'Utilisateur introuvable' });
+            return userNotFound(res);
         }
 
         res.status(200).json({
-            message: "Utilsateur supprimé"
+            message: "Deleted user"
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erreur lors de la suppression' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
@@ -46,27 +62,56 @@ export const updatePlayedGameController = async (req: Request, res: Response) =>
             message: "Game updated"
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erreur lors de l\'ajout d\'une partie au conteur' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
 
 export const updatePlayerDataController = async (req: Request, res: Response) => {
     try {
-        console.log(req.user.email, req.user.username);
+        if (!req.body || (!req.body.username && !req.body.email)) {
+            return res.status(400).json({
+                error: 'Wrong request format',
+                format: {
+                    username: "string",
+                    email: "string"
+                }
+            });
+        }
+
         const user: UserUpdate = {
             email: req.body.email || req.user.email,
             username: req.body.username || req.user.username
         };
 
         if (await updatePlayerData(req.user.id, user) === false)
-            res.status(200).json({ message: "Email is not correct" });
+            return res.status(200).json({ message: "Incorrect e-mail address format" });
 
         res.status(200).json({
             message: "User updated"
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error during updating user' });
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                return res.status(400).json({
+                    error: "There is a unique constraint violation, user cannot be updated",
+                    field: error.meta?.target
+                })
+            }
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }
