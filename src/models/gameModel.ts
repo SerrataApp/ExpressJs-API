@@ -11,12 +11,12 @@ export interface Game {
     time: number;
     errors: number;
     hint: number;
-    public: Boolean;
 }
 
 export interface GameInDb extends Game {
     id: number;
     gameDate: Date;
+    public: Boolean;
 }
 
 //-------------Fonctions de traitement-------------
@@ -81,6 +81,23 @@ export async function getGamesByGameMode(gameMode: number) {
 
 export async function createGame(newGame: Game): Promise<Game | null> {
     try {
+        const bestGame = await prisma.game.findFirst({
+            where: {
+                gameMode: newGame.gameMode,
+                playerId: newGame.playerId,
+                time: {
+                    lt: newGame.time
+                }
+            }
+        })
+        if (!bestGame) {
+            newGame.public = true;
+            await prisma.game.updateMany({
+                data: { public: false },          
+            })
+        } else {
+            newGame.public = false;
+        }
         const game: Game | null = await prisma.game.create({
             data: newGame
         });
