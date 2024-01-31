@@ -66,6 +66,13 @@ export async function getGamesByGameMode(gameMode: number) {
                 Game: {
                     where: {
                         public: true
+                    },
+                    include: {
+                        player: {
+                            select: {
+                                username: true
+                            }
+                        }
                     }
                 }
             }
@@ -131,18 +138,20 @@ export async function deleteGame(id: number): Promise<Boolean> {
 
 export async function updateGameState(id: number): Promise<Boolean> {
     try {
-        const gameState: boolean = await prisma.game.findUnique({
+        const gameState = await prisma.game.findUnique({
             where: { id: id },
-            select: { public: true }
+            select: { 
+                playerId: true,
+                gameMode: true,
+                public: true }
         });
-        const gameModeId = await prisma.game.findUnique({
-            where: { id: id },
-            select: { gameMode: true }
-        });
-        if (!gameModeId) return false;
+        if (!gameState) return false;
         await prisma.game.updateMany({
             data: { public: false },
-            where: { gameMode: gameModeId?.gameMode }
+            where: { 
+                gameMode: gameState.gameMode,
+                playerId: gameState.playerId,
+            }
         });
         console.log(gameState);
         
