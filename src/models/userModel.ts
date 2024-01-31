@@ -258,3 +258,14 @@ export async function getAdminField(id: number): Promise<Boolean> {
         throw error;
     }
 }
+
+export async function turnOffCGU() {
+    try {
+        await prisma.user.updateMany({
+            data: { cgu: false }
+        })
+        return;
+    } catch (error) {
+        throw error;
+    }
+}

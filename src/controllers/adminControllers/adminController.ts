@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { deleteUser, disableUser } from "../../models/userModel";
+import { deleteUser, disableUser, turnOffCGU } from "../../models/userModel";
 import { deleteGame } from "../../models/gameModel";
 import { Prisma } from "@prisma/client";
 import { addGitHubIssue } from "../../utils/githubIssues";
@@ -48,6 +48,25 @@ export const deleteAnyUserController = async (req: Request, res: Response) => {
         await deleteUser(req.query.username as string);
         res.status(200).json({
             message: "User deleted"
+        })
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}
+
+export const turnOffCGUController = async (req: Request, res: Response) => {
+    try {
+        await turnOffCGU();
+        res.status(200).json({
+            message: "CGU turned off"
         })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
