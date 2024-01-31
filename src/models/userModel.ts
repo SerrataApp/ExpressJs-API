@@ -292,3 +292,15 @@ export async function turnOffCGU() {
         throw error;
     }
 }
+
+export async function updateCGU(username: string) {
+    try {
+        await prisma.user.update({
+            where: { username: username },
+            data: { cgu: true }
+        })
+        return;
+    } catch (error) {
+        throw error;
+    }
+}

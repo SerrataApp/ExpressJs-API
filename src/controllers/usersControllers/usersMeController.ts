@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
-import { UserPrivateData, UserUpdate, deleteUser, getUserPrivateData, updatePlayedGame, updatePlayerData } from "../../models/userModel";
+import { UserPrivateData, UserUpdate, deleteUser, getUserPrivateData, updateCGU, updatePlayedGame, updatePlayerData } from "../../models/userModel";
 import { userNotFound } from "../../error/userNotFound";
 import { addGitHubIssue } from "../../utils/githubIssues";
 
@@ -105,6 +105,25 @@ export const updatePlayerDataController = async (req: Request, res: Response) =>
                     field: error.meta?.target
                 })
             }
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}
+
+export const updateCGUController = async (req: Request, res: Response) => {
+    try {
+        await updateCGU(req.user.username);
+        res.status(200).json({
+            message: "CGU updated"
+        });
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
             
             res.status(500).json({
