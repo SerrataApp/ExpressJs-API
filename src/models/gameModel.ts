@@ -152,9 +152,7 @@ export async function updateGameState(id: number): Promise<Boolean> {
                 gameMode: gameState.gameMode,
                 playerId: gameState.playerId,
             }
-        });
-        console.log(gameState);
-        
+        });        
         await prisma.game.update({
             where: { id: id },
             data: { public: !gameState.public }
