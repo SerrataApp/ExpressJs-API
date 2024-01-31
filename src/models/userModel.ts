@@ -16,6 +16,7 @@ export interface UserPrivateData extends UserPublicData {
 export interface UserCreate extends UserUpdate {
     id: number;
     password: string;
+    cgu?: boolean;
 }
 
 export interface UserUpdate {
@@ -111,8 +112,8 @@ export async function getUserCreate(username: string): Promise<UserCreate | null
         const user: UserCreate | null = await prisma.user.findFirst({
             where: { OR: [
                 {username: username},
-                {email: username}
-            ]}
+                {email: username},
+            ]},
         });
         if (user) {
             const { id, username, email, password } = user;

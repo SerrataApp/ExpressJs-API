@@ -23,8 +23,8 @@ export const createUserController = async (req: Request, res: Response) => {
         }
         let newUser: UserCreate = req.body;
 
-        const { id, username, email, password } = newUser;
-        newUser = { id, username, email, password };
+        const { id, username, email, password, cgu } = newUser;
+        newUser = { id, username, email, password, cgu };
 
         const createdUser = await createUser(newUser);
         if (createdUser == false) {
