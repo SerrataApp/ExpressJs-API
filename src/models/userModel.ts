@@ -211,6 +211,25 @@ export async function getPlayerIdByUsername(username: string): Promise<number | 
     }
 }
 
+export async function getPlayerUsernameById(id: number): Promise<string | null> {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                username: true
+            }
+        });
+        if (user)
+            return user.username;
+        else
+            return null
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function getUserAllData(id: number) {
     try {
         const user = await prisma.user.findUnique({
