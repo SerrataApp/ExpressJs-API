@@ -30,7 +30,7 @@ export const createUserController = async (req: Request, res: Response) => {
         if (createdUser == false) {
             res.status(400).json({
                 error: "Incorrect e-mail address format"
-            });
+            }); 
         } else {
             res.status(201).json({
                 createdUser,
@@ -46,7 +46,7 @@ export const createUserController = async (req: Request, res: Response) => {
                 })
             }
             addGitHubIssue(error)
-
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -76,7 +76,7 @@ export const getUserUsernameController = async (req: Request, res: Response) => 
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
-
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -106,7 +106,7 @@ export const getUserIdController = async (req: Request, res: Response) => {
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
-
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })
@@ -117,7 +117,7 @@ export const getUserIdController = async (req: Request, res: Response) => {
 }
 
 export const loginUserController = async (req: Request, res: Response) => {
-    if (!req.body || (!req.body.username && !req.body.email) || !req.body.password) {
+    if (!req.body || !req.body.username || !req.body.password) {
         return res.status(400).json({
             error: 'Wrong request format',
             format: {
@@ -130,22 +130,19 @@ export const loginUserController = async (req: Request, res: Response) => {
     let userToLogin: UserCreate = req.body;
     const { id, username, email, password } = userToLogin;
     userToLogin = { id, username, email, password };
-    const userToCheck: { username: string | null, email: string | null } = { username: userToLogin.username || null, email: userToLogin.email || null};
-    console.log(userToCheck);
-
 
     try {
-        const user: UserCreate | null = await getUserCreate(userToCheck);
-
+        const user: UserCreate | null = await getUserCreate(userToLogin.username);
+    
         if (!user) {
             return userNotFound(res);
         }
-
+    
         if (bcrypt.compareSync(userToLogin.password + process.env.SEL, user.password)) {
             const token = jwt.sign(
                 { user },
                 process.env.SECRET_KEY as string,
-                { expiresIn: "24h", algorithm: "HS256" }
+                { expiresIn: "24h", algorithm: "HS256"}
             );
             res.json({
                 token,
@@ -159,7 +156,7 @@ export const loginUserController = async (req: Request, res: Response) => {
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
-
+            
             res.status(500).json({
                 error: "Prisma error, please notify api creator",
             })

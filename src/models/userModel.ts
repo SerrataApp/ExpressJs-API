@@ -106,18 +106,14 @@ export async function getUserPrivateData(username: string): Promise<UserPrivateD
     }
 }
 
-export async function getUserCreate(field: { username: string | null, email: string | null }): Promise<UserCreate | null> {
+export async function getUserCreate(username: string): Promise<UserCreate | null> {
     try {
-        let user: UserCreate | null;
-        if (!field.username) {
-            user = await prisma.user.findFirst({
-                where: { email: field.email as string }
-            })
-        } else {
-            user = await prisma.user.findFirst({
-                where: { email: field.email as string }
-            })
-        }
+        const user: UserCreate | null = await prisma.user.findFirst({
+            where: { OR: [
+                {username: username},
+                {email: username}
+            ]}
+        });
         if (user) {
             const { id, username, email, password } = user;
             const UserCreate: UserCreate = { id, username, email, password };
