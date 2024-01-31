@@ -127,7 +127,7 @@ export async function getUserCreate(username: string): Promise<UserCreate | null
 export async function createUser(newUser: UserCreate): Promise<UserPrivateData | Boolean> {
     if (validateEmail(newUser.email) == null)
         return false
-    newUser.password = setPassword(newUser.password)
+    newUser.password = setPassword(newUser.password + process.env.SEL)
     try {
         const createUser = await prisma.user.create({
             data: newUser,
