@@ -18,20 +18,20 @@ jobs:
                     node-version: 18.x   
             -   run: npm ci
     
-    postgres:
-        name: Install and setup postgres
-        runs-on: ubuntu-latest
-        steps:
-            -   name: Install postresql
-                run: |
-                    sudo apt update
-                    sudo apt install -y postgresql postgresql-contrib
-                    sudo systemctl start postgresql.service
-                    sudo -u postgres psql -f setup.sql
+    # postgres:
+    #     name: Install and setup postgres
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         -   name: Install postresql
+    #             run: |
+    #                 sudo apt update
+    #                 sudo apt install -y postgresql postgresql-contrib
+    #                 sudo systemctl start postgresql.service
+    #                 sudo -u postgres psql -f setup.sql
 
     test:
         name: Units test
-        needs: [build, postgres]
+        needs: [build]
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
