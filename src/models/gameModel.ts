@@ -37,9 +37,7 @@ export async function getAllUserGames(username: string): Promise<[]> {
         const games = await prisma.user.findMany({
             where: { username: username },
             select: {
-                Games: {
-                    where: { public: true }
-                }
+                Games: true
             }
         });
         return games[0].Games;
