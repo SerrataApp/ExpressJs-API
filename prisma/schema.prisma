@@ -34,7 +34,7 @@ model Game {
   errors   Int
   hint     Int
   gameDate DateTime @default(now())
-  public   Boolean @default(false)
+  public   Boolean  @default(false)
 
   player User     @relation(fields: [playerId], references: [id])
   mode   GameMode @relation(fields: [gameMode], references: [id])
@@ -56,6 +56,7 @@ model Image {
   id       Int      @id @default(autoincrement())
   name     String[]
   img      String   @unique
+  ref      String   @unique
   authorId Int
 
   author User @relation(fields: [authorId], references: [id])

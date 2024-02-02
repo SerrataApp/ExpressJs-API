@@ -1,5 +1,4 @@
 import AWS from 'aws-sdk';
-import express, { Request, Response } from 'express';
 
 class BucketConnection {
     private s3: AWS.S3;
@@ -15,7 +14,7 @@ class BucketConnection {
     async imageUploadToS3(Id: string, imageBuf: any): Promise<void> {
         const params = {
             Bucket: process.env.BUCKET_NAME as string,
-            Key: `${Id}.png`,
+            Key: `${Id}.webp`,
             Body: imageBuf,
         };
         try {

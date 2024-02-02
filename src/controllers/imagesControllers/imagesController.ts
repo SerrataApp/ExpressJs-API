@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import { Image, createImage, deleteImage, getImage, updateImage } from "../../models/imageModels";
 import { addGitHubIssue } from "../../utils/githubIssues";
 import BucketConnection from "../../utils/bucketConnection";
+import { convertImageToWebpBinary } from "../../utils/imageConverter";
 
 const bucketConnection = new BucketConnection();
 
@@ -36,10 +37,13 @@ export const createImageController = async (req: Request, res: Response) => {
     try {
         let newImage: Image = req.body;
         newImage.authorId = req.user.id as number;
-        const { id, name, img, authorId } = newImage
-        newImage = { id, name, img, authorId }
-        await createImage(newImage)
-        res.status(201).json({ message: "Image created" })
+        const { name, img, authorId } = newImage
+        newImage = { name, img, authorId }
+        const ref = await createImage(newImage)
+        res.status(201).json({
+            ref: ref,
+            message: "Image created"
+        })
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
@@ -58,21 +62,6 @@ export const createImageController = async (req: Request, res: Response) => {
             
             res.status(500).json({ error: 'Internal server error' });
         }
-    }
-}
-
-export const uploadImageController = async (req: Request, res: Response) => {
-    
-    try {
-        if (!req.files || Object.keys(req.files).length === 0) {
-            return res.status(400).json({ error: 'No files were uploaded.' });
-        }
-        const fileContent = Buffer.from(req.files.uploadedFileName.data, 'binary');
-    
-        await bucketConnection.imageUploadToS3("image-test", fileContent);
-        res.status(200).json({ message: "Image uploaded" })
-    } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
     }
 }
 
@@ -117,5 +106,27 @@ export const deleteImageController = async (req: Request, res: Response) => {
         } else {
             res.status(500).json({ error: 'Internal server error' });
         }
+    }
+}
+
+export const uploadImageController = async (req: Request, res: Response) => {
+    
+    try {
+        if (!req.files || Object.keys(req.files).length === 0) {
+            return res.status(400).json({ error: 'No files were uploaded.' });
+        }
+        const fileContent = Buffer.from(req.files.uploadedFile.data, 'base64');
+        const file = req.files.uploadedFile.name.split('.');
+        if (file[1] !== 'png' && file[1] !== 'jpg' && file[1] !== 'jpeg') {
+            return res.status(400).json({ error: 'Only .png or .jpg or .jpeg files are allowed' });
+        }
+
+        const webpBase64 = await convertImageToWebpBinary(fileContent);
+        
+        await bucketConnection.imageUploadToS3(file[0], webpBase64);
+        res.status(200).json({ message: "Image uploaded" })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
