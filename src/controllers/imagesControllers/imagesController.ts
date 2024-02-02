@@ -110,7 +110,6 @@ export const deleteImageController = async (req: Request, res: Response) => {
 }
 
 export const uploadImageController = async (req: Request, res: Response) => {
-    
     try {
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).json({ error: 'No files were uploaded.' });
@@ -125,6 +124,15 @@ export const uploadImageController = async (req: Request, res: Response) => {
         
         await bucketConnection.imageUploadToS3(file[0], webpBase64);
         res.status(200).json({ message: "Image uploaded" })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+export const getImageFromS3Controller = async (req: Request, res: Response) => {
+    try {
+        await bucketConnection.imageGetFromS3(req.query.id as string, res);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Internal server error' });

@@ -36,7 +36,11 @@ export async function getAllUserGames(username: string): Promise<[]> {
     try {
         const games = await prisma.user.findMany({
             where: { username: username },
-            select: { Games: true }
+            select: {
+                Games: {
+                    where: { public: true }
+                }
+            }
         });
         return games[0].Games;
     } catch (error) {
@@ -140,19 +144,20 @@ export async function updateGameState(id: number): Promise<Boolean> {
     try {
         const gameState = await prisma.game.findUnique({
             where: { id: id },
-            select: { 
+            select: {
                 playerId: true,
                 gameMode: true,
-                public: true }
+                public: true
+            }
         });
         if (!gameState) return false;
         await prisma.game.updateMany({
             data: { public: false },
-            where: { 
+            where: {
                 gameMode: gameState.gameMode,
                 playerId: gameState.playerId,
             }
-        });        
+        });
         await prisma.game.update({
             where: { id: id },
             data: { public: !gameState.public }
