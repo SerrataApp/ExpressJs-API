@@ -31,7 +31,7 @@ jobs:
 
     # test:
     #     name: Units test
-    #     needs: [build]
+    #     needs: [build, postgres]
     #     runs-on: ubuntu-latest
     #     steps:
     #         -   name: Checkout
