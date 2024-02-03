@@ -192,6 +192,19 @@ export async function updatePlayerData(id: number, data: UserUpdate): Promise<Us
     }
 }
 
+export async function updatePassword(id: number, password: string): Promise<Boolean> {
+    try {
+        const newPassword = setPassword(password);
+        await prisma.user.update({
+            where: { id: id },
+            data: { password: newPassword }
+        });
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function getPlayerIdByUsername(username: string): Promise<number | null> {
     try {
         const user_id = await prisma.user.findUnique({
@@ -254,6 +267,23 @@ export async function getAdminField(id: number): Promise<Boolean> {
         });
         //@ts-ignore
         return userAdmin.admin;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getUserByEmail(email: string): Promise<UserPrivateData | null> {
+    try {
+        const user: UserPrivateData | null = await prisma.user.findUnique({
+            where: { email: email }
+        });
+        if (user) {
+            const { id, username, playedGames, email, signupDate, disabled, cgu, admin } = user;
+            const UserPrivateData: UserPrivateData = { id, username, playedGames, email, signupDate, disabled, cgu, admin };
+            return UserPrivateData;
+        } else {
+            return null;
+        }
     } catch (error) {
         throw error;
     }
