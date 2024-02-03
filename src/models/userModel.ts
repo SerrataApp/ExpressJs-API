@@ -192,6 +192,19 @@ export async function updatePlayerData(id: number, data: UserUpdate): Promise<Us
     }
 }
 
+export async function updatePassword(id: number, password: string): Promise<Boolean> {
+    try {
+        const newPassword = setPassword(password);
+        await prisma.user.update({
+            where: { id: id },
+            data: { password: newPassword }
+        });
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function getPlayerIdByUsername(username: string): Promise<number | null> {
     try {
         const user_id = await prisma.user.findUnique({

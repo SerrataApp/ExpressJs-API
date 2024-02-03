@@ -1,9 +1,8 @@
 import nodemailer from 'nodemailer';
 
 export const sendEmail = async (receiverEmail: string, subject: string, body: string) => {
-    const service = process.env.EMAIL_SERVICE as string;
     const configTransporter = {
-        service,
+        service: 'gmail',
         auth: {
             type: 'OAuth2',
             user: process.env.EMAIL_USER,
@@ -14,20 +13,18 @@ export const sendEmail = async (receiverEmail: string, subject: string, body: st
         }
     }
 
-    const transporter = nodemailer.createTransport(configTransporter);
+    const transporter = nodemailer.createTransport(configTransporter as nodemailer.TransportOptions);
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: receiverEmail,
         subject: subject,
-        text: body,
+        html: body,
     }
 
     transporter.sendMail(mailOptions, (err, data) => {
         if (err) {
             console.log('Error occurs', err);
-        } else {
-            console.log('Email sent!!!');
         }
     })
 }
