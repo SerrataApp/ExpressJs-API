@@ -5,7 +5,6 @@ import { Prisma } from "@prisma/client";
 import { Image, createImage, deleteImage, getImage, updateImage } from "../../models/imageModels";
 import { addGitHubIssue } from "../../utils/githubIssues";
 import BucketConnection from "../../utils/bucketConnection";
-import { convertImageToWebpBinary } from "../../utils/imageConverter";
 
 const bucketConnection = new BucketConnection();
 
