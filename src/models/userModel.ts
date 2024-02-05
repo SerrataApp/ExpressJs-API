@@ -313,6 +313,11 @@ export async function updateCGU(username: string) {
             data: { cgu: true }
         })
         return;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function getUserByEmail(email: string): Promise<UserPrivateData | null> {
     try {
         const user: UserPrivateData | null = await prisma.user.findUnique({
