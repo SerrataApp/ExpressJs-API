@@ -23,8 +23,8 @@ export const createUserController = async (req: Request, res: Response) => {
         }
         let newUser: UserCreate = req.body;
 
-        const { id, username, email, password } = newUser;
-        newUser = { id, username, email, password };
+        const { id, username, email, password, cgu } = newUser;
+        newUser = { id, username, email, password, cgu };
 
         const createdUser = await createUser(newUser);
         if (createdUser == false) {
@@ -138,11 +138,11 @@ export const loginUserController = async (req: Request, res: Response) => {
             return userNotFound(res);
         }
     
-        if (bcrypt.compareSync(userToLogin.password, user.password)) {
+        if (bcrypt.compareSync(userToLogin.password + process.env.SEL, user.password)) {
             const token = jwt.sign(
                 { user },
                 process.env.SECRET_KEY as string,
-                { expiresIn: "24h" }
+                { expiresIn: "24h", algorithm: "HS256"}
             );
             res.json({
                 token,

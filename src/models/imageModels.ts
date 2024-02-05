@@ -1,6 +1,7 @@
 //@ts-nocheck
 
 import { PrismaClient } from '@prisma/client';
+import { randomUUID } from 'crypto';
 
 const prisma = new PrismaClient();
 
@@ -24,14 +25,17 @@ export async function getImage(id: number): Promise<Image | null> {
 
 export async function createImage(image: Image): Promise<Boolean> {
     try {
+        const ref = randomUUID();
+        
         await prisma.image.create({
             data: {
                 name: image.name,
                 img: image.img,
-                authorId: image.authorId
+                authorId: image.authorId,
+                ref: ref
             }
         })
-        return true;
+        return ref;
     } catch (error) {
         throw error;
     }

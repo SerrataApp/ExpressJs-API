@@ -32,6 +32,11 @@ spec:
                               secretKeyRef:
                                   name: postgres-express-secret
                                   key: SECRET_KEY
+                      -   name: SEL
+                          valueFrom:
+                              secretKeyRef:
+                                  name: postgres-express-secret
+                                  key: SEL
                   imagePullPolicy: Always
                   resources:
                       requests:

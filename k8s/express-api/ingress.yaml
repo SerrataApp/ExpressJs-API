@@ -7,10 +7,10 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`serrata-db-stats.super-sympa.fr`)
+    - match: Host(`serrata-api.super-sympa.fr`)
       kind: Rule
       services:
         - name: serrata-api-express-svc
           port: 3000
   tls:
-    secretName: serrata-db-certificate-secret
+    secretName: serrata-api-certificate-secret

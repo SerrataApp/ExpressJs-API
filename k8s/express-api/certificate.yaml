@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: serrata-api-certificate
+  namespace: serrata
+spec:
+  # certificats wildcard
+  dnsNames:
+  - 'serrata-api.super-sympa.fr'
+
+  issuerRef:
+    kind: ClusterIssuer
+    name: cert-manager-serrata-stats #notre issuer
+  # Secret pour stocker les certificats
+  secretName: serrata-api-certificate-secret

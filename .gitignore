@@ -7,3 +7,5 @@ backup
 dist
 coverage
 .github/workflows/test.yml
+pg.load
+index.html
