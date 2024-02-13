@@ -57,8 +57,8 @@ export const createGameModeController = async (req: Request, res: Response) => {
     try {
         let newGameMode: GameMode = req.body;
         newGameMode.authorId = req.user.id as number;
-        const { id, name, description, authorId } = newGameMode
-        newGameMode = { id, name, description, authorId }
+        const { id, name, description, authorId, lang } = newGameMode
+        newGameMode = { id, name, description, authorId, lang }
         const gamemode = await createGameMode(newGameMode)
         console.log(gamemode);
         
@@ -80,6 +80,8 @@ export const createGameModeController = async (req: Request, res: Response) => {
                 error: "Prisma error, please notify api creator",
             })
         } else {
+            console.log(error);
+            
             res.status(500).json({ error: 'Internal server error' });
         }
     }
@@ -116,6 +118,22 @@ export const deleteGameModeController = async (req: Request, res: Response) => {
     try {
         await deleteGameMode(parseInt(req.query.id as string, 10));
         res.status(200).json({ message: "Game mode deleted" })
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}
+
+export const createAllGameModeController = async (req: Request, res: Response) => {
+    try {
+        
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             addGitHubIssue(error)
