@@ -8,6 +8,7 @@ import adminRoutes from './routes/admin/adminRoutes'
 import imageRoutes from './routes/images/imageRoutes'
 import gameModeRoutes from './routes/gameModes/gameModeRoutes'
 import modeRoutes from './routes/modes/modesRoutes'
+import resetPasswordRoutes from "./routes/resetPassword/resetPasswordRoutes";
 import { ensureAuthenticated } from "./middleware/loginMiddleware";
 import { isAdmin } from "./middleware/adminMiddleware";
 import { isModeOwner } from "./middleware/modeMiddleware";
@@ -27,6 +28,7 @@ app.use('/admin', ensureAuthenticated, isAdmin, adminRoutes);
 app.use('/image', imageRoutes);
 app.use('/gameMode', gameModeRoutes);
 app.use('/mode', ensureAuthenticated, isModeOwner, modeRoutes);
+app.use('/resetpassword', resetPasswordRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     console.log(
