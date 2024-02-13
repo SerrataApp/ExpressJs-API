@@ -132,6 +132,16 @@ export const deleteGameModeController = async (req: Request, res: Response) => {
 
 export const createAllGameModeController = async (req: Request, res: Response) => {
     try {
+        let newGameMode: GameMode = req.body;
+        const images: [] = newGameMode.imageList;
+
+        //création du mode de jeu
+        newGameMode.authorId = req.user.id as number;
+        const { id, name, description, authorId, lang } = newGameMode
+        newGameMode = { id, name, description, authorId, lang }
+        const gamemode = await createGameMode(newGameMode)
+
+        //création des images
         
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {

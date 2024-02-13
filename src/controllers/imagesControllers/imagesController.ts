@@ -36,6 +36,14 @@ export const getImageController = async (req: Request, res: Response) => {
 
 export const createImageController = async (req: Request, res: Response) => {
     try {
+        //si ya plusieurs images
+        if (req.body.images.length > 1) {
+            console.log("plusieurs images");
+            
+        }
+        else {
+            console.log("une image");
+        }
         let newImage: Image = req.body;
         newImage.authorId = req.user.id as number;
         const { name, img, authorId } = newImage
@@ -65,6 +73,8 @@ export const createImageController = async (req: Request, res: Response) => {
         }
     }
 }
+
+
 
 export const updateImageController = async (req: Request, res: Response) => {
     try {
