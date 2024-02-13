@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Response } from 'express';
 import { request } from 'http';
 
@@ -21,7 +22,7 @@ class BucketConnection {
         };
         try {
             await this.s3.upload(params).promise();
-        } catch(error) {
+        } catch (error) {
             throw new Error('Error while uploading image to S3');
         }
     }
@@ -38,7 +39,7 @@ class BucketConnection {
             });
 
             request(`https://${process.env.BUCKET_NAME}.s3.amazonaws.com/${Id}.webp`).pipe(res.set('Content-Type', 'image/webp').set('Content-Disposition', `inline; filename=${Id}.webp`))
-        } catch(error) {
+        } catch (error) {
             throw new Error('Error while getting image from S3');
         }
     }
