@@ -330,6 +330,18 @@ export async function updateCGU(username: string) {
             data: { cgu: true }
         })
         return;
+export async function getUserByEmail(email: string): Promise<UserPrivateData | null> {
+    try {
+        const user: UserPrivateData | null = await prisma.user.findUnique({
+            where: { email: email }
+        });
+        if (user) {
+            const { id, username, playedGames, email, signupDate, disabled, cgu, admin } = user;
+            const UserPrivateData: UserPrivateData = { id, username, playedGames, email, signupDate, disabled, cgu, admin };
+            return UserPrivateData;
+        } else {
+            return null;
+        }
     } catch (error) {
         throw error;
     }

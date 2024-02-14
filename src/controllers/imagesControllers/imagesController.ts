@@ -6,6 +6,7 @@ import { Image, createImage, deleteImage, getImage, updateImage } from "../../mo
 import { addGitHubIssue } from "../../utils/githubIssues";
 import { createPresignedUrlToUpload } from "../../utils/preSignedUrl";
 
+
 export const getImageController = async (req: Request, res: Response) => {
     try {
         const image: Image | null = await getImage(parseInt(req.query.id as string, 10));

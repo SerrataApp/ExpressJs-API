@@ -29,9 +29,9 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.9",
     "node-fetch": "^3.3.2",
+    "nodemailer": "^6.9.9",
     "octokit": "^3.1.2",
     "prisma": "^5.7.0",
-    "sharp": "^0.33.2",
     "supertest": "^6.3.3"
   },
   "devDependencies": {
