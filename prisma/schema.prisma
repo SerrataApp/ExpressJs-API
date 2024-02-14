@@ -45,7 +45,7 @@ model GameMode {
   name        String            @unique
   description String?
   authorId    Int
-  lang        String
+  lang        String            @default("fr")
   imageList   ImageInGameMode[]
 
   author User @relation(fields: [authorId], references: [id])
