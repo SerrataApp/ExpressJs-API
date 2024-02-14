@@ -4,7 +4,8 @@ import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import { Image, createImage, deleteImage, getImage, updateImage } from "../../models/imageModels";
 import { addGitHubIssue } from "../../utils/githubIssues";
-import { createPresignedUrlToUpload } from "../../utils/preSignedUrl";
+import BucketConnection from "../../utils/bucketConnection";
+import { convertImageToWebpBinary } from "../../utils/imageConverter";
 
 
 export const getImageController = async (req: Request, res: Response) => {
