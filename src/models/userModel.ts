@@ -110,10 +110,12 @@ export async function getUserPrivateData(username: string): Promise<UserPrivateD
 export async function getUserCreate(username: string): Promise<UserCreate | null> {
     try {
         const user: UserCreate | null = await prisma.user.findFirst({
-            where: { OR: [
-                {username: username},
-                {email: username},
-            ]},
+            where: {
+                OR: [
+                    { username: username },
+                    { email: username },
+                ]
+            },
         });
         if (user) {
             const { id, username, email, password } = user;
@@ -330,23 +332,6 @@ export async function updateCGU(username: string) {
             data: { cgu: true }
         })
         return;
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function getUserByEmail(email: string): Promise<UserPrivateData | null> {
-    try {
-        const user: UserPrivateData | null = await prisma.user.findUnique({
-            where: { email: email }
-        });
-        if (user) {
-            const { id, username, playedGames, email, signupDate, disabled, cgu, admin } = user;
-            const UserPrivateData: UserPrivateData = { id, username, playedGames, email, signupDate, disabled, cgu, admin };
-            return UserPrivateData;
-        } else {
-            return null;
-        }
     } catch (error) {
         throw error;
     }
