@@ -23,19 +23,22 @@ export async function getImage(id: number): Promise<Image | null> {
     }
 }
 
-export async function createImage(image: Image): Promise<Boolean> {
+export async function createImage(image: [Image], authorId: number): Promise<Boolean> {
     try {
-        const ref = randomUUID();
-        
-        await prisma.image.create({
-            data: {
-                name: image.name,
-                img: image.img,
-                authorId: image.authorId,
-                ref: ref
-            }
-        })
-        return ref;
+        const uuidList: [string] = [];
+        await Promise.all(image.map(async (img) => {
+            const ref = randomUUID();
+            await prisma.image.create({
+                data: {
+                    name: img.name,
+                    img: img.img,
+                    authorId: authorId,
+                    ref: ref
+                }
+            })
+            uuidList.push(ref); 
+        }));
+        return uuidList;
     } catch (error) {
         throw error;
     }

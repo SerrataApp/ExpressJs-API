@@ -4,11 +4,7 @@ import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import { Image, createImage, deleteImage, getImage, updateImage } from "../../models/imageModels";
 import { addGitHubIssue } from "../../utils/githubIssues";
-import BucketConnection from "../../utils/bucketConnection";
-import { convertImageToWebpBinary } from "../../utils/imageConverter";
 import { createPresignedUrlToUpload } from "../../utils/preSignedUrl";
-
-const bucketConnection = new BucketConnection();
 
 export const getImageController = async (req: Request, res: Response) => {
     try {
@@ -36,19 +32,9 @@ export const getImageController = async (req: Request, res: Response) => {
 
 export const createImageController = async (req: Request, res: Response) => {
     try {
-        //si ya plusieurs images
-        if (req.body.images.length > 1) {
-            console.log("plusieurs images");
-            
-        }
-        else {
-            console.log("une image");
-        }
-        let newImage: Image = req.body;
-        newImage.authorId = req.user.id as number;
-        const { name, img, authorId } = newImage
-        newImage = { name, img, authorId }
-        const ref = await createImage(newImage)
+        const authorId = req.user.id as number;
+        const newImage: [Image] = req.body;
+        const ref = await createImage(newImage, authorId)
         res.status(201).json({
             ref: ref,
             message: "Image created"
