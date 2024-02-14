@@ -20,6 +20,7 @@ model User {
   disabled    Boolean  @default(false)
   cgu         Boolean  @default(false)
   admin       Boolean  @default(false)
+  img         String?
 
   Games    Game[]
   GameMode GameMode[]
@@ -45,7 +46,8 @@ model GameMode {
   name        String            @unique
   description String?
   authorId    Int
-  lang        Lang            @default(unknow)
+  lang        Lang              @default(unknow)
+  img         String?
   imageList   ImageInGameMode[]
 
   author User @relation(fields: [authorId], references: [id])
