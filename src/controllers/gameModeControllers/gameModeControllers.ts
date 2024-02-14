@@ -4,8 +4,9 @@ import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import { addGitHubIssue } from "../../utils/githubIssues";
 import { getGameMode, GameMode, createGameMode, updateGameMode, deleteGameMode, getAllImages } from "../../models/gameModeModel";
-import { createImage } from "../../models/imageModels";
+import { createImage, getAllImagesByUUID } from "../../models/imageModels";
 import { createPresignedUrlToUpload } from "../../utils/preSignedUrl";
+import { createUpdateMode } from "../../models/modeModels";
 
 export const getGameModeController = async (req: Request, res: Response) => {
     try {
@@ -146,6 +147,14 @@ export const createAllGameModeController = async (req: Request, res: Response) =
         //création des images
         const imagesUUID = await createImage(images, req.user.id as number);
         const imagesURL = await createPresignedUrlToUpload(process.env.REGION as string, process.env.BUCKET_NAME as string, imagesUUID);
+        const imagesId = await getAllImagesByUUID(imagesUUID);
+        console.log(imagesId);
+        
+
+        await createUpdateMode({gameModeId: gamemode, imageId: imagesId});
+
+        //liasion entre image et gamemode
+
         
         res.status(201).json({
             id: gamemode,
