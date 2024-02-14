@@ -295,6 +295,23 @@ export async function getAdminField(id: number): Promise<Boolean> {
     }
 }
 
+export async function getUserByEmail(email: string): Promise<UserPrivateData | null> {
+    try {
+        const user: UserPrivateData | null = await prisma.user.findUnique({
+            where: { email: email }
+        });
+        if (user) {
+            const { id, username, playedGames, email, signupDate, disabled, cgu, admin } = user;
+            const UserPrivateData: UserPrivateData = { id, username, playedGames, email, signupDate, disabled, cgu, admin };
+            return UserPrivateData;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function turnOffCGU() {
     try {
         await prisma.user.updateMany({

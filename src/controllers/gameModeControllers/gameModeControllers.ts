@@ -4,6 +4,9 @@ import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import { addGitHubIssue } from "../../utils/githubIssues";
 import { getGameMode, GameMode, createGameMode, updateGameMode, deleteGameMode, getAllImages } from "../../models/gameModeModel";
+import { createImage, getAllImagesByUUID } from "../../models/imageModels";
+import { createPresignedUrlToUpload } from "../../utils/preSignedUrl";
+import { createUpdateMode } from "../../models/modeModels";
 
 export const getGameModeController = async (req: Request, res: Response) => {
     try {
@@ -57,10 +60,9 @@ export const createGameModeController = async (req: Request, res: Response) => {
     try {
         let newGameMode: GameMode = req.body;
         newGameMode.authorId = req.user.id as number;
-        const { id, name, description, authorId } = newGameMode
-        newGameMode = { id, name, description, authorId }
+        const { id, name, description, authorId, lang } = newGameMode
+        newGameMode = { id, name, description, authorId, lang }
         const gamemode = await createGameMode(newGameMode)
-        console.log(gamemode);
         
         res.status(201).json({ 
             id: gamemode,
@@ -80,6 +82,8 @@ export const createGameModeController = async (req: Request, res: Response) => {
                 error: "Prisma error, please notify api creator",
             })
         } else {
+            console.log(error);
+            
             res.status(500).json({ error: 'Internal server error' });
         }
     }
@@ -124,6 +128,48 @@ export const deleteGameModeController = async (req: Request, res: Response) => {
                 error: "Prisma error, please notify api creator",
             })
         } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}
+
+export const createAllGameModeController = async (req: Request, res: Response) => {
+    try {
+        let newGameMode: GameMode = req.body;
+        const images: [] = newGameMode.imageList;
+
+        //création du mode de jeu
+        newGameMode.authorId = req.user.id as number;
+        const { id, name, description, authorId, lang } = newGameMode
+        newGameMode = { id, name, description, authorId, lang }
+        const gamemode = await createGameMode(newGameMode)
+
+        //création des images
+        const imagesUUID = await createImage(images, req.user.id as number);
+        const imagesURL = await createPresignedUrlToUpload(process.env.REGION as string, process.env.BUCKET_NAME as string, imagesUUID);
+        const imagesId = await getAllImagesByUUID(imagesUUID);
+        console.log(imagesId);
+        
+
+        await createUpdateMode({gameModeId: gamemode, imageId: imagesId});
+
+        //liasion entre image et gamemode
+
+        
+        res.status(201).json({
+            id: gamemode,
+            imagesURL,
+        })
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            addGitHubIssue(error)
+            
+            res.status(500).json({
+                error: "Prisma error, please notify api creator",
+            })
+        } else {
+            console.log(error);
+            
             res.status(500).json({ error: 'Internal server error' });
         }
     }
