@@ -1,5 +1,0 @@
-load database
-    from postgresql://postgres:serratasupersympa@localhost:54941/serrata
-    into postgresql://postgres:root@localhost:5432/serratabackup
-    with create no tables
-;
