@@ -23,19 +23,40 @@ export async function getImage(id: number): Promise<Image | null> {
     }
 }
 
-export async function createImage(image: Image): Promise<Boolean> {
+export async function getAllImagesByUUID(uuidList: [string]): Promise<[number]> {
     try {
-        const ref = randomUUID();
-        
-        await prisma.image.create({
-            data: {
-                name: image.name,
-                img: image.img,
-                authorId: image.authorId,
-                ref: ref
+        const images: [number] = await prisma.image.findMany({
+            where: {
+                ref: {
+                    in: uuidList
+                }
+            },
+            select: {
+                id: true
             }
         })
-        return ref;
+        return images.map((img) => img.id);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function createImage(image: [Image], authorId: number): Promise<Boolean> {
+    try {
+        const uuidList: [string] = [];
+        await Promise.all(image.map(async (img) => {
+            const ref = randomUUID();
+            await prisma.image.create({
+                data: {
+                    name: img.name,
+                    img: img.img,
+                    authorId: authorId,
+                    ref: ref
+                }
+            })
+            uuidList.push(ref); 
+        }));
+        return uuidList;
     } catch (error) {
         throw error;
     }
@@ -66,3 +87,4 @@ export async function deleteImage(id: number): Promise<Boolean> {
         throw error;
     }
 }
+

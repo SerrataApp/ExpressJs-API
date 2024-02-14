@@ -9,6 +9,7 @@ export interface GameMode {
     name: string;
     description: string;
     authorId: number;
+    lang: string;
 }
 
 export async function getGameMode(id: number): Promise<GameMode | null> {
@@ -55,7 +56,8 @@ export async function createGameMode(gameMode: GameMode): Promise<number> {
             data: {
                 name: gameMode.name,
                 description: gameMode.description,
-                authorId: gameMode.authorId
+                authorId: gameMode.authorId,
+                lang: gameMode.lang
             }
         })
         return gamemode.id;
