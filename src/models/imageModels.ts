@@ -41,6 +41,24 @@ export async function getAllImagesByUUID(uuidList: [string]): Promise<[number]> 
     }
 }
 
+export async function getAllImagesUUIDById(ids: [number]) {
+    try {
+        const images: [number] = await prisma.image.findMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            select: {
+                ref: true
+            }
+        })
+        return images.map((img) => img.ref);
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function createImage(image: [Image], authorId: number): Promise<Boolean> {
     try {
         const uuidList: [string] = [];

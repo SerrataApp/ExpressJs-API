@@ -45,7 +45,7 @@ model GameMode {
   name        String            @unique
   description String?
   authorId    Int
-  lang        String            @default("fr")
+  lang        Lang            @default(unknow)
   imageList   ImageInGameMode[]
 
   author User @relation(fields: [authorId], references: [id])
@@ -74,4 +74,10 @@ model ImageInGameMode {
   gameMode GameMode @relation(fields: [gameModeId], references: [id])
 
   @@unique([imageId, gameModeId])
+}
+
+enum Lang {
+  unknow
+  fr
+  en
 }

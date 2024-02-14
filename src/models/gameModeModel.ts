@@ -1,6 +1,7 @@
 //@ts-nocheck
 
 import { PrismaClient } from '@prisma/client';
+import { getAllImagesUUIDById } from './imageModels';
 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,7 @@ export interface GameMode {
     description: string;
     authorId: number;
     lang: string;
+    imageList: [string];
 }
 
 export async function getGameMode(id: number): Promise<GameMode | null> {
@@ -17,8 +19,16 @@ export async function getGameMode(id: number): Promise<GameMode | null> {
         const gameMode: GameMode | null = await prisma.gameMode.findUnique({
             where: { 
                 id: id,
+            },
+            include: {
+                imageList: {
+                    select: {
+                        imageId: true
+                    }
+                }
             }
         })
+        gameMode?.imageList = await getAllImagesUUIDById(gameMode?.imageList?.map((i) => i.imageId)) || [];
         return gameMode;
     } catch (error) {
         throw error;
