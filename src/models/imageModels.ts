@@ -59,9 +59,9 @@ export async function getAllImagesUUIDById(ids: [number]) {
     }
 }
 
-export async function createImage(image: [Image], authorId: number): Promise<Boolean> {
+export async function createImage(image: Image[], authorId: number): Promise<string[]> {
     try {
-        const uuidList: [string] = [];
+        const uuidList: string[] = [];
         await Promise.all(image.map(async (img) => {
             const ref = randomUUID();
             await prisma.image.create({
