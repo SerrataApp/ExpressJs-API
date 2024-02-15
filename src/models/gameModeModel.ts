@@ -39,22 +39,22 @@ export async function getAllImages(id: number) {
     try {
         const images = await prisma.gameMode.findUnique({
             where: { id: id },
-            select: {
+            include: {
                 imageList: {
                     select: {
                         image: {
                             select: {
-                                id: true,
                                 name: true,
                                 img: true,
-                                authorId: true,
+                                ref: true
                             },
                         }
                     }
                 }
             }
         })
-        return images?.imageList.map((item: any) => item.image);
+        // ?.imageList.map((item: any) => item.image);
+        return images
     } catch (error) {
         throw error;
     }
