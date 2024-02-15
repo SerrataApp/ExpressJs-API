@@ -58,7 +58,7 @@ model GameMode {
 model Image {
   id       Int      @id @default(autoincrement())
   name     String[]
-  img      String   @unique
+  img      String   
   ref      String   @unique
   authorId Int
 
