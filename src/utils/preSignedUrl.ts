@@ -15,7 +15,7 @@ export const createPresignedUrlToUpload = async (region: string, bucket: string,
         await Promise.all(key.map(async (k) => {
             const command = new PutObjectCommand({
                 Bucket: bucket,
-                Key: `image/${k}.webp`,
+                Key: `image/${k}`,
             });
             urlsList.push(await getSignedUrl(client, command, { expiresIn: 120 }));
         }))
