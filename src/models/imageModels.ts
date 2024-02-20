@@ -63,7 +63,8 @@ export async function createImage(image: Image[], authorId: number): Promise<str
     try {
         const uuidList: string[] = [];
         await Promise.all(image.map(async (img) => {
-            const ref = randomUUID();
+            
+            const ref = randomUUID() + img.img.split('.')[1];
             await prisma.image.create({
                 data: {
                     name: img.name,
