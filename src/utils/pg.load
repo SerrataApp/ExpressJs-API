@@ -1,7 +1,0 @@
-load database
-    from postgresql://postgres:842650@localhost:5432/serratamigration
-    into postgresql://postgres:serratasupersympa@localhost:51786/serrata
-    with create no tables
-;
-
-ocid1.tenancy.oc1..aaaaaaaayoegqsr7sgwgejb45cm4s5reimleg4sdl4mtdzos7sj44ss3jboq/ocid1.user.oc1..aaaaaaaaaay75zhqet44lorta5rg7mvnyt7h6phvjz645qne3ps4x7v77uba/a9:63:06:ab:1f:61:b3:f4:f0:b3:ef:2d:c1:81:ce:e9

@@ -41,11 +41,30 @@ export async function getAllImagesByUUID(uuidList: [string]): Promise<[number]> 
     }
 }
 
-export async function createImage(image: [Image], authorId: number): Promise<Boolean> {
+export async function getAllImagesUUIDById(ids: [number]) {
     try {
-        const uuidList: [string] = [];
+        const images: [number] = await prisma.image.findMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            select: {
+                ref: true
+            }
+        })
+        return images.map((img) => img.ref);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function createImage(image: Image[], authorId: number): Promise<string[]> {
+    try {
+        const uuidList: string[] = [];
         await Promise.all(image.map(async (img) => {
-            const ref = randomUUID();
+            
+            const ref = randomUUID() + img.img.split('.')[1];
             await prisma.image.create({
                 data: {
                     name: img.name,

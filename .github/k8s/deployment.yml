@@ -37,6 +37,31 @@ spec:
                               secretKeyRef:
                                   name: postgres-express-secret
                                   key: SEL
+                      -   name: PERSONNAL_TOKEN
+                          valueFrom:
+                              secretKeyRef:
+                                  name: postgres-express-secret
+                                  key: PERSONNAL_TOKEN
+                      -   name: AWS_ACCESS_KEY
+                          valueFrom:
+                              secretKeyRef:
+                                  name: postgres-express-secret
+                                  key: AWS_ACCESS_KEY
+                      -   name: AWS_SECRET_ACCESS_KEY
+                          valueFrom:
+                              secretKeyRef:
+                                  name: postgres-express-secret
+                                  key: AWS_SECRET_ACCESS_KEY
+                      -   name: REGION
+                          valueFrom:
+                              secretKeyRef:
+                                  name: postgres-express-secret
+                                  key: REGION
+                      -   name: BUCKET_NAME
+                          valueFrom:
+                              secretKeyRef:
+                                  name: postgres-express-secret
+                                  key: BUCKET_NAME
                   imagePullPolicy: Always
                   resources:
                       requests:

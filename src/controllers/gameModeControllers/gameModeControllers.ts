@@ -10,7 +10,7 @@ import { createUpdateMode } from "../../models/modeModels";
 
 export const getGameModeController = async (req: Request, res: Response) => {
     try {
-        const gameMode: GameMode | null = await getGameMode(parseInt(req.query.id as string, 10));
+        const gameMode: GameMode | null = await getAllImages(parseInt(req.query.id as string, 10));
         if (!gameMode) {
             res.status(400).json({ error: 'This game mode doesn\'t exist' });
         } else {

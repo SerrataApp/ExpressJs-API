@@ -4,6 +4,8 @@ import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import { Image, createImage, deleteImage, getImage, updateImage } from "../../models/imageModels";
 import { addGitHubIssue } from "../../utils/githubIssues";
+import BucketConnection from "../../utils/bucketConnection";
+import { convertImageToWebpBinary } from "../../utils/imageConverter";
 import { createPresignedUrlToUpload } from "../../utils/preSignedUrl";
 
 
@@ -34,8 +36,8 @@ export const getImageController = async (req: Request, res: Response) => {
 export const createImageController = async (req: Request, res: Response) => {
     try {
         const authorId = req.user.id as number;
-        const newImage: [Image] = req.body;
-        const ref = await createImage(newImage, authorId)
+        const newImage = req.body;
+        const ref = await createImage(newImage.images, authorId)
         res.status(201).json({
             ref: ref,
             message: "Image created"
@@ -54,8 +56,6 @@ export const createImageController = async (req: Request, res: Response) => {
                 error: "Prisma error, please notify api creator",
             })
         } else {
-            console.log(error);
-            
             res.status(500).json({ error: 'Internal server error' });
         }
     }
@@ -130,7 +130,7 @@ export const deleteImageController = async (req: Request, res: Response) => {
 
 export const getPresignedUrlToUpload = async (req: Request, res: Response) => {
     try {
-        const url = await createPresignedUrlToUpload(process.env.REGION as string, process.env.BUCKET_NAME as string, `${req.query.id}.webp`);
+        const url = await createPresignedUrlToUpload(process.env.REGION as string, process.env.BUCKET_NAME as string, req.body.keys);
         res.status(200).json({ url });
     } catch (error) {
         console.log(error);
